@@ -4,7 +4,8 @@
  * @interface AuthRepository
  */
 
-import { AuthCredentials } from "../model/auth/AuthCredentials";
+import { AuthCredentials } from "../dto/auth/AuthCredentials";
+import { RegisterUserDto } from "../dto/register/RegisterUserDto";
 import { User } from "../model/User";
 
 /**
@@ -25,7 +26,7 @@ import { User } from "../model/User";
 
 export interface AuthRepository {
     login(credentials: AuthCredentials): Promise<User>;
-    register(user: User): Promise<void>;
+    register(user: RegisterUserDto): Promise<User>;
 }
 
 //cómo hacerlo  (abstrae la capa de datos y proporciona una manera de realizar operaciones  )

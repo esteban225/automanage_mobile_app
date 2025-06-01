@@ -7,13 +7,13 @@
  * 
  * @class
  */
- 
+
 /**
  * Crea una instancia de RegisterUserUseCase.
  * 
  * @param authRepository - Repositorio de autenticación que implementa AuthRepository.
  */
- 
+
 /**
  * Ejecuta el registro de un usuario.
  * 
@@ -25,16 +25,23 @@
  * @returns Una promesa que resuelve con el usuario registrado.
  * @throws Error si el correo electrónico o la contraseña no son proporcionados.
  */
+
+import { RegisterUserDto } from "../../domain/dto/register/RegisterUserDto";
 import { User } from "../../domain/model/User";
 import { AuthRepository } from "../../domain/repositories/AuthRepository";
 
 export const registerUserUseCase = async (
-  user: User,
+  credentials: RegisterUserDto,
   repository: AuthRepository
-): Promise<void> => {
+): Promise<User> => {
+
+  if (!credentials.email || !credentials.password || !credentials.nombre || !credentials.username) {
+    throw new Error("Todos los campos son obligatorios");
+  }
+
   // puedes poner lógica adicional aquí (validaciones, logs, reglas, etc.)
-  await repository.register(user);
-  
+  const user = await repository.register(credentials);
+  return user;
 };
 
 //qué hacer (logica de negocio cordina la capa )

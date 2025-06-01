@@ -15,44 +15,55 @@ Automanage Mobile App es una aplicación móvil diseñada para la gestión efici
 
 ## Estructura del Proyecto
 
-app
- ┣ (admin)
- ┃ ┗ home.tsx
- ┣ (auth)
- ┃ ┣ login.tsx
- ┃ ┗ register.tsx
- ┣ (tabs)
- ┃ ┣ index.tsx
- ┃ ┣ two.tsx
- ┃ ┗ _layout.tsx
- ┣ (user)
- ┃ ┗ home.tsx
- ┣ +html.tsx
- ┣ +not-found.tsx
- ┣ modal.tsx
- ┗ _layout.tsx
-
- src
- ┣ core
- ┃ ┣ domain
- ┃ ┃ ┗ model
- ┃ ┃ ┃ ┗ User.ts
- ┃ ┗ useCases
- ┣ infrastructure
- ┃ ┗ api
- ┃ ┃ ┗ auth
- ┃ ┃ ┃ ┗ auth.service.ts
- ┗ presentation
- ┃ ┣ providers
- ┃ ┃ ┗ AuthProvider.tsx
- ┃ ┗ screens
- ┃ ┃ ┣ admin
- ┃ ┃ ┃ ┗ home.tsx
- ┃ ┃ ┣ auth
- ┃ ┃ ┃ ┣ login.tsx
- ┃ ┃ ┃ ┗ register.tsx
- ┃ ┃ ┗ user
- ┃ ┃ ┃ ┗ home.tsx 
+📦app
+ ┣ 📂(admin)
+ ┃ ┗ 📜home.tsx
+ ┣ 📂(auth)
+ ┃ ┣ 📜login.tsx
+ ┃ ┗ 📜register.tsx
+ ┣ 📂(tabs)
+ ┃ ┣ 📜index.tsx
+ ┃ ┣ 📜two.tsx
+ ┃ ┗ 📜_layout.tsx
+ ┣ 📂(user)
+ ┃ ┗ 📜home.tsx
+ ┣ 📜+html.tsx
+ ┣ 📜+not-found.tsx
+ ┣ 📜modal.tsx
+ ┗ 📜_layout.tsx
+ 
+📦src
+ ┣ 📂core
+ ┃ ┣ 📂domain
+ ┃ ┃ ┣ 📂model
+ ┃ ┃ ┃ ┣ 📂auth
+ ┃ ┃ ┃ ┃ ┗ 📜AuthCredentials.ts
+ ┃ ┃ ┃ ┗ 📜User.ts
+ ┃ ┃ ┗ 📂repositories
+ ┃ ┃ ┃ ┗ 📜AuthRepository.ts
+ ┃ ┗ 📂useCases
+ ┃ ┃ ┣ 📂client
+ ┃ ┃ ┗ 📂user
+ ┃ ┃ ┃ ┣ 📜loginUserUseCase.ts
+ ┃ ┃ ┃ ┗ 📜registerUserUseCase.ts
+ ┣ 📂infrastructure
+ ┃ ┗ 📂api
+ ┃ ┃ ┣ 📂auth
+ ┃ ┃ ┃ ┣ 📂repositoryImpl
+ ┃ ┃ ┃ ┃ ┗ 📜AuthRepositoryImpl.ts
+ ┃ ┃ ┃ ┗ 📜auth.service.ts
+ ┃ ┃ ┗ 📂client
+ ┗ 📂presentation
+ ┃ ┣ 📂providers
+ ┃ ┃ ┗ 📜AuthProvider.tsx
+ ┃ ┗ 📂screens
+ ┃ ┃ ┣ 📂admin
+ ┃ ┃ ┃ ┗ 📜home.tsx
+ ┃ ┃ ┣ 📂auth
+ ┃ ┃ ┃ ┣ 📜login.tsx
+ ┃ ┃ ┃ ┗ 📜register.tsx
+ ┃ ┃ ┗ 📂user
+ ┃ ┃ ┃ ┗ 📜home.tsx
 
 
 

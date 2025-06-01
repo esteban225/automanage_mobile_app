@@ -11,9 +11,10 @@ import {
 } from "react-native";
 import { useAuth } from "../../providers/AuthProvider";
 
+
 export default function RegisterScreen() {
   const router = useRouter();
-  const { signup } = useAuth();
+  const { register } = useAuth();
 
   const [credentials, setCredentials] = useState({
     username: "",
@@ -78,7 +79,7 @@ export default function RegisterScreen() {
     if (!validateForm()) return;
 
     try {
-      signup(credentials);
+      register(credentials);
       router.replace("/login");
     } catch (error: any) {
         if (error.message) {
