@@ -3,28 +3,9 @@ import { View, Text, StyleSheet, SafeAreaView, ScrollView, TouchableOpacity } fr
 
 const UserHome = () => {
     return (
-        <SafeAreaView style={styles.container}>
-            <ScrollView contentContainerStyle={styles.content}>
-                <Text style={styles.title}>Welcome to Automanage!</Text>
-                <Text style={styles.subtitle}>Your Dashboard</Text>
-                <View style={styles.section}>
-                    <Text style={styles.sectionTitle}>Quick Actions</Text>
-                    <TouchableOpacity style={styles.button}>
-                        <Text style={styles.buttonText}>View Profile</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.button}>
-                        <Text style={styles.buttonText}>Manage Vehicles</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.button}>
-                        <Text style={styles.buttonText}>Service History</Text>
-                    </TouchableOpacity>
-                </View>
-                <View style={styles.section}>
-                    <Text style={styles.sectionTitle}>Recent Activity</Text>
-                    <Text style={styles.activityText}>No recent activity.</Text>
-                </View>
-            </ScrollView>
-        </SafeAreaView>
+        <Text>
+            users
+        </Text>
     );
 };
 

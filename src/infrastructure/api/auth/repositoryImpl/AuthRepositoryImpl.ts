@@ -21,7 +21,7 @@ export class AuthRepositoryImpl implements AuthRepository {
    * @throws {Error} - Puede lanzar errores si la petición HTTP falla o si el token no es válido.
    */
   async login(credentials: AuthCredentials): Promise<User> {
-    const response = await axios.post("http://localhost:8000/api/auth/login", credentials);
+    const response = await axios.post("http://192.168.76.253:8000/api/auth/login", credentials);
 
     const data = response.data as {
       user: {
@@ -68,7 +68,7 @@ export class AuthRepositoryImpl implements AuthRepository {
    * @returns {Promise<void>} - Promesa que se resuelve cuando el usuario ha sido registrado exitosamente.
    */
   async register(userData: RegisterUserDto): Promise<User> {
-    const response = await axios.post("http://localhost:8000/api/auth/signup", userData); // Enviar userData directamente
+    const response = await axios.post("http://192.168.76.253:8000/api/auth/signup", userData); // Enviar userData directamente
     return response.data as User; // Asumiendo que el backend retorna el User creado
   }
 }

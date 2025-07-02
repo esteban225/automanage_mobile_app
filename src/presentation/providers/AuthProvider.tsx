@@ -1,7 +1,5 @@
-// Importación de React y hooks necesarios
-import React, { createContext, useContext, useState } from "react";
-// Importación del servicio de autenticación
-// Importación de los tipos de datos del dominio
+import React, { createContext, useContext, useState, useEffect } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { User } from "../../core/domain/model/User";
 import { AuthRepositoryImpl } from "@/src/infrastructure/api/auth/repositoryImpl/AuthRepositoryImpl";
 import { loginUserUseCase } from "@/src/core/useCases/user/loginUserUseCase";
@@ -9,95 +7,85 @@ import { AuthCredentials } from "@/src/core/domain/dto/auth/AuthCredentials";
 import { registerUserUseCase } from "@/src/core/useCases/user/registerUserUseCase";
 import { RegisterUserDto } from "@/src/core/domain/dto/register/RegisterUserDto";
 
-/**
- * Interfaz que define la estructura del contexto de autenticación.
- */
 interface AuthContextValue {
-  user: User | null; // Usuario autenticado o null si no hay sesión
-  login: (credentials: AuthCredentials) => Promise<void>; // Función para iniciar sesión
+  user: User | null;
+  login: (credentials: AuthCredentials) => Promise<void>;
+  register: (credentials: RegisterUserDto) => Promise<void>;
+  logout: () => Promise<void>;
   setUser: React.Dispatch<React.SetStateAction<User | null>>;
-  // logout: () => Promise<void>; // Función para cerrar sesión
-   register: (credentials: RegisterUserDto) => Promise<void>; //
+  loading: boolean;
 }
 
-/**
- * Creación del contexto de autenticación con valores iniciales vacíos.
- */
 const AuthContext = createContext<AuthContextValue>({
   user: null,
   login: async () => {},
-  setUser: () => {},
-  // logout: async () => {},
   register: async () => {},
+  logout: async () => {},
+  setUser: () => {},
+  loading: true,
 });
 
-/**
- * Componente proveedor del contexto de autenticación.
- * Este componente debe envolver cualquier parte de la app que necesite acceso al estado de autenticación.
- *
- * @param children Elementos hijos que tendrán acceso al contexto.
- */
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  // Estado para almacenar el usuario autenticado
   const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  // Instancia del servicio de autenticación
-  // const authService = new AuthService();
+  useEffect(() => {
+    const loadUserFromStorage = async () => {
+      try {
+        const storedUser = await AsyncStorage.getItem("user");
+        if (storedUser) {
+          setUser(JSON.parse(storedUser));
+        }
+      } catch (error) {
+        console.error("Error al cargar usuario desde AsyncStorage", error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  /**
-   * Función para iniciar sesión.
-   * Llama al servicio de autenticación y actualiza el estado del usuario.
-   *
-   * @param credentials Credenciales de inicio de sesión (usuario y contraseña)
-   */
+    loadUserFromStorage();
+  }, []);
+
   const login = async ({ email, password }: AuthCredentials) => {
     const repository = new AuthRepositoryImpl();
     const loggedUser = await loginUserUseCase(email, password, repository);
     setUser(loggedUser);
+    await AsyncStorage.setItem("user", JSON.stringify(loggedUser));
   };
-  /**
-   * Función para registrar un nuevo usuario.
-   * Llama al servicio de registro y actualiza el estado del usuario.
-   *
-   * @param credentials Credenciales de registro (usuario, contraseña, etc.)
-   */
-  const register = async (credentials: RegisterUserDto) => {
-    console.log("signup provider", credentials);
-    const repository = new AuthRepositoryImpl();
-    const registedUser = await registerUserUseCase(credentials, repository);
-    setUser(registedUser);
-  };
-  /**
-   * Función para cerrar sesión.
-   * Llama al servicio de logout y limpia el estado del usuario.
-   */
-  // const logout = async () => {
-  //   await authService.logout();
-  //   setUser(null);
-  // };
 
-  // Objeto que contiene los valores del contexto para ser compartidos
+  const register = async (credentials: RegisterUserDto) => {
+    const repository = new AuthRepositoryImpl();
+    const registeredUser = await registerUserUseCase(credentials, repository);
+    setUser(registeredUser);
+    await AsyncStorage.setItem("user", JSON.stringify(registeredUser));
+  };
+
+  const logout = async () => {
+    await AsyncStorage.removeItem("user");
+    setUser(null);
+  };
+
   const contextValue = React.useMemo<AuthContextValue>(
-    () => ({ user, login, register, setUser }),
-    [user, login, register, setUser]
+    () => ({
+      user,
+      login,
+      register,
+      logout,
+      setUser,
+      loading,
+    }),
+    [user, login, register, logout, loading]
   );
 
-  /**
-   * Proporciona el contexto de autenticación a los componentes hijos.
-   */
   return (
-    <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
+    <AuthContext.Provider value={contextValue}>
+      {children}
+    </AuthContext.Provider>
   );
 };
 
-/**
- * Hook personalizado para acceder al contexto de autenticación de forma más sencilla.
- *
- * @throws Error si se usa fuera de un AuthProvider.
- * @returns El contexto de autenticación (usuario, login, logout)
- */
 export const useAuth = (): AuthContextValue => {
   const context = useContext(AuthContext);
   if (!context) {

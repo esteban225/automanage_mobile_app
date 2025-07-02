@@ -7,19 +7,46 @@ import {
   Alert,
   StyleSheet,
 } from "react-native";
-// If useAuth is the default export:
 import { useAuth } from "../../../presentation/providers/AuthProvider";
-// Or, if the export is named differently, for example AuthProvider:
-//
-// import { AuthProvider } from "../../../presentation/providers/AuthProvider";
-// and then use AuthProvider instead of useAuth in your code.
-import { Link, useRouter } from "expo-router";
+import { Link, useRouter, usePathname } from "expo-router";
 
 export default function LoginScreen() {
   const router = useRouter();
+  const currentPath = usePathname();
   const { login, user } = useAuth();
   const [credentials, setCredentials] = useState({ email: "", password: "" });
 
+  // Función de redirección por rol
+  const redirectByRole = (role: string): string => {
+    switch (role) {
+      case "admin":
+        return "/(admin)/dashboard";
+      case "user":
+        return "/(user)/home/home";
+      case "mecanico":
+        return "/mecanico/home";
+      default:
+        return "/";
+    }
+  };
+
+  // Redirección automática cuando el usuario cambia
+  useEffect(() => {
+    if (!user || !user.role) return;
+
+    try {
+      const destination = redirectByRole(user.role);
+      const baseRoute = "/" + destination.split("/")[1]; // Ej: /admin
+
+      // Si ya estás en la sección base (como /admin), no redirige
+      if (!currentPath.startsWith(baseRoute)) {
+        router.replace(destination as any);
+      }
+    } catch (error) {
+      console.error("Error al redirigir:", error);
+    }
+  }, [user]);
+  // Manejo del botón de login
   const handleLogin = async () => {
     try {
       if (!credentials.email || !credentials.password) {
@@ -35,25 +62,6 @@ export default function LoginScreen() {
       }
     }
   };
-
-useEffect(() => {
-  
-  
-  if (!user || !user.role) return;
-
-  try {
-    if (user.role === "admin") {
-      router.replace("/(admin)/home");
-    } else if (user.role === "user") {
-      router.replace("/(user)/home");
-    } else {
-      router.replace("/");
-    }
-  } catch (error) {
-    console.error("Error al redirigir:", error);
-  }
-}, [user]);
-
 
   return (
     <View style={styles.container}>
