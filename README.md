@@ -13,8 +13,11 @@ Automanage Mobile App es una aplicación móvil diseñada para la gestión efici
 - Gestión de gastos asociados a cada vehículo.
 - Interfaz intuitiva y fácil de usar.
 
-## Estructura del Proyecto
+---
 
+## 📂 Estructura del Proyecto
+
+```
 📦app
  ┣ 📂(admin)
  ┃ ┗ 📜home.tsx
@@ -31,13 +34,17 @@ Automanage Mobile App es una aplicación móvil diseñada para la gestión efici
  ┣ 📜+not-found.tsx
  ┣ 📜modal.tsx
  ┗ 📜_layout.tsx
- 
+
+
 📦src
  ┣ 📂core
  ┃ ┣ 📂domain
- ┃ ┃ ┣ 📂model
+ ┃ ┃ ┣ 📂dto
  ┃ ┃ ┃ ┣ 📂auth
  ┃ ┃ ┃ ┃ ┗ 📜AuthCredentials.ts
+ ┃ ┃ ┃ ┗ 📂register
+ ┃ ┃ ┃ ┃ ┗ 📜RegisterUserDto.ts
+ ┃ ┃ ┣ 📂model
  ┃ ┃ ┃ ┗ 📜User.ts
  ┃ ┃ ┗ 📂repositories
  ┃ ┃ ┃ ┗ 📜AuthRepository.ts
@@ -49,9 +56,8 @@ Automanage Mobile App es una aplicación móvil diseñada para la gestión efici
  ┣ 📂infrastructure
  ┃ ┗ 📂api
  ┃ ┃ ┣ 📂auth
- ┃ ┃ ┃ ┣ 📂repositoryImpl
+ ┃ ┃ ┃ ┗ 📂repositoryImpl
  ┃ ┃ ┃ ┃ ┗ 📜AuthRepositoryImpl.ts
- ┃ ┃ ┃ ┗ 📜auth.service.ts
  ┃ ┃ ┗ 📂client
  ┗ 📂presentation
  ┃ ┣ 📂providers
@@ -60,10 +66,50 @@ Automanage Mobile App es una aplicación móvil diseñada para la gestión efici
  ┃ ┃ ┣ 📂admin
  ┃ ┃ ┃ ┗ 📜home.tsx
  ┃ ┃ ┣ 📂auth
+ ┃ ┃ ┃ ┣ 📂components
+ ┃ ┃ ┃ ┃ ┗ 📜ButtonComponent.tsx
  ┃ ┃ ┃ ┣ 📜login.tsx
  ┃ ┃ ┃ ┗ 📜register.tsx
+ ┃ ┃ ┣ 📂components
+ ┃ ┃ ┃ ┗ 📜ColorsComponent.tsx
  ┃ ┃ ┗ 📂user
- ┃ ┃ ┃ ┗ 📜home.tsx
+ ┃ ┃ ┃ ┣ 📂car
+ ┃ ┃ ┃ ┃ ┣ 📂CardScreens
+ ┃ ┃ ┃ ┃ ┃ ┣ 📜CarDetailing.tsx
+ ┃ ┃ ┃ ┃ ┃ ┣ 📜CarPapers.tsx
+ ┃ ┃ ┃ ┃ ┃ ┣ 📜MaintenanceCar.tsx
+ ┃ ┃ ┃ ┃ ┃ ┗ 📜VehicleAppointments.tsx
+ ┃ ┃ ┃ ┃ ┣ 📂components
+ ┃ ┃ ┃ ┃ ┃ ┣ 📜ActionCircle.tsx
+ ┃ ┃ ┃ ┃ ┃ ┣ 📜CardService.tsx
+ ┃ ┃ ┃ ┃ ┃ ┣ 📜ImageCar.tsx
+ ┃ ┃ ┃ ┃ ┃ ┗ 📜ModalActionCircle.tsx
+ ┃ ┃ ┃ ┃ ┗ 📜home.tsx
+ ┃ ┃ ┃ ┣ 📂emergency
+ ┃ ┃ ┃ ┃ ┣ 📂components
+ ┃ ┃ ┃ ┃ ┃ ┗ 📜CardComponent.tsx
+ ┃ ┃ ┃ ┃ ┗ 📜home.tsx
+ ┃ ┃ ┃ ┣ 📂home
+ ┃ ┃ ┃ ┃ ┣ 📂components
+ ┃ ┃ ┃ ┃ ┃ ┗ 📜CardComponent.tsx
+ ┃ ┃ ┃ ┃ ┗ 📜home.tsx
+ ┃ ┃ ┃ ┣ 📂notifications
+ ┃ ┃ ┃ ┃ ┣ 📂components
+ ┃ ┃ ┃ ┃ ┃ ┗ 📜CardComponent.tsx
+ ┃ ┃ ┃ ┃ ┗ 📜home.tsx
+ ┃ ┃ ┃ ┣ 📂profile
+ ┃ ┃ ┃ ┃ ┣ 📂components
+ ┃ ┃ ┃ ┃ ┃ ┗ 📜CardComponent.tsx
+ ┃ ┃ ┃ ┃ ┗ 📜home.tsx
+ ┃ ┃ ┃ ┣ 📂settings
+ ┃ ┃ ┃ ┃ ┣ 📂components
+ ┃ ┃ ┃ ┃ ┃ ┗ 📜CardComponent.tsx
+ ┃ ┃ ┃ ┃ ┗ 📜home.tsx
+ ┃ ┃ ┃ ┗ 📜home.tsx           
+
+```
+
+---
 
 
 
