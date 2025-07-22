@@ -19,12 +19,10 @@ export default function LoginScreen() {
   // Función de redirección por rol
   const redirectByRole = (role: string): string => {
     switch (role) {
-      case "admin":
-        return "/(admin)/dashboard";
       case "user":
-        return "/(user)/home/home";
-      case "mecanico":
-        return "/mecanico/home";
+        return "/(user)";
+      case "admin":
+        return "/(admin)";
       default:
         return "/";
     }

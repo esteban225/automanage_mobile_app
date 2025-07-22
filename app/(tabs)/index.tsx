@@ -1,7 +1,38 @@
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Alert } from 'react-native';
 import { Link } from 'expo-router';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useEffect } from 'react';
 
 export default function TabOneScreen() {
+  const handleDeleteUser = async () => {
+    try {
+      await AsyncStorage.removeItem('user');
+      console.log('[TabOneScreen] Usuario eliminado de AsyncStorage');
+      Alert.alert('Usuario eliminado del almacenamiento local.');
+    } catch (error) {
+      console.error('[TabOneScreen] Error eliminando usuario:', error);
+      Alert.alert('Error al eliminar el usuario');
+    }
+  };
+
+  useEffect(() => {
+    const checkUser = async () => {
+      try {
+        const user = await AsyncStorage.getItem('user');
+        if (user) {
+          console.log('[TabOneScreen] Usuario encontrado en AsyncStorage:', JSON.parse(user));
+        } else {
+          console.log('[TabOneScreen] No hay usuario en AsyncStorage');
+        }
+      } catch (error) {
+        console.error('[TabOneScreen] Error al obtener usuario:', error);
+      }
+    };
+
+    checkUser();
+  }, []);
+
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>AutoManage</Text>
@@ -19,6 +50,11 @@ export default function TabOneScreen() {
             <Text style={styles.buttonTextAlt}>Registrarse</Text>
           </TouchableOpacity>
         </Link>
+
+        {/* Botón para eliminar el usuario de AsyncStorage */}
+        <TouchableOpacity style={styles.buttonDanger} onPress={handleDeleteUser}>
+          <Text style={styles.buttonText}>Eliminar Usuario</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -58,6 +94,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderColor: '#007aff',
     borderWidth: 1.5,
+    paddingVertical: 14,
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+  buttonDanger: {
+    backgroundColor: '#ff3b30',
     paddingVertical: 14,
     borderRadius: 10,
     alignItems: 'center',

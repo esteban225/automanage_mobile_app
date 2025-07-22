@@ -1,6 +1,6 @@
 import { Text } from "react-native";
 
-export default function Home(){
+export default function Profile(){
     return (
         <>
             <Text>Home Screen</Text>

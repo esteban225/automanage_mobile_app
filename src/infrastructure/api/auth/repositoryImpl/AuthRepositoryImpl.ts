@@ -11,17 +11,11 @@ import { RegisterUserDto } from "@/src/core/domain/dto/register/RegisterUserDto"
  */
 export class AuthRepositoryImpl implements AuthRepository {
 
-  /**
-   * Inicia sesión de un usuario autenticándolo con el backend.
-   * 
-   * @param {AuthCredentials} credentials - Objeto con las credenciales del usuario (email y contraseña).
-   * 
-   * @returns {Promise<User>} - Promesa que se resuelve con el usuario autenticado y su token.
-   * 
-   * @throws {Error} - Puede lanzar errores si la petición HTTP falla o si el token no es válido.
-   */
   async login(credentials: AuthCredentials): Promise<User> {
-    const response = await axios.post("http://192.168.76.253:8000/api/auth/login", credentials);
+    console.debug("Iniciando proceso de login con credenciales:", credentials);
+
+    const response = await axios.post("http://192.168.100.7:8000/api/auth/login", credentials);
+    console.debug("Respuesta recibida del backend:", response.data);
 
     const data = response.data as {
       user: {
@@ -36,14 +30,19 @@ export class AuthRepositoryImpl implements AuthRepository {
     };
 
     // Decodificar token JWT para obtener el rol del usuario
-    let role: 'admin' | 'user' = 'user';
+    let role: 'admin' | 'user' | undefined = undefined;
     try {
       const decodedToken: any = jwtDecode(data.token);
+      console.debug("Token decodificado:", decodedToken);
+
       if (decodedToken.role === 'admin' || decodedToken.role === 'user') {
         role = decodedToken.role;
+        console.debug("Rol extraído del token:", role);
+      } else {
+        console.warn("Rol no reconocido en el token:", decodedToken.role);
       }
     } catch (error) {
-      console.warn("No se pudo decodificar el token:", error);
+      console.error("Error al decodificar el token:", error);
     }
 
     const user: User = {
@@ -51,24 +50,23 @@ export class AuthRepositoryImpl implements AuthRepository {
       username: data.user.username,
       email: data.user.email,
       name: data.user.nombre,
-      role, // Asignado desde el token decodificado
+      role: role || 'user', // Asignar 'user' por defecto si no se encuentra rol
       token: data.token,
       address: data.user.direccion || '',
       phone: data.user.telefono || '',
     };
 
+    console.info("Usuario autenticado correctamente:", user);
     return user;
   }
 
-  /**
-   * Registra un nuevo usuario enviando sus datos al backend.
-   * 
-   * @param {User & { password: string }} user - Objeto que contiene los datos del usuario y su contraseña.
-   * 
-   * @returns {Promise<void>} - Promesa que se resuelve cuando el usuario ha sido registrado exitosamente.
-   */
   async register(userData: RegisterUserDto): Promise<User> {
-    const response = await axios.post("http://192.168.76.253:8000/api/auth/signup", userData); // Enviar userData directamente
-    return response.data as User; // Asumiendo que el backend retorna el User creado
+    console.debug("Enviando datos para registro de usuario:", userData);
+
+    const response = await axios.post("http://192.168.100.7:8000/api/auth/signup", userData);
+
+    console.debug("Respuesta del registro:", response.data);
+
+    return response.data as User;
   }
 }
