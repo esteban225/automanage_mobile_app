@@ -8,7 +8,9 @@ function TabBarIcon(props: {
   name: React.ComponentProps<typeof FontAwesome5>["name"];
   color: string;
 }) {
-  return <FontAwesome5 size={20} style={{ marginBottom: -4 }} solid {...props} />;
+  return (
+    <FontAwesome5 size={20} style={{ marginBottom: -4 }} solid {...props} />
+  );
 }
 
 export default function UserLayout() {
@@ -64,6 +66,38 @@ export default function UserLayout() {
         options={{
           title: "Ajustes",
           tabBarIcon: ({ color }) => <TabBarIcon name="cog" color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="car/(screens)/CarScreens/Detailing"
+        options={{
+          headerShown: true,
+          headerTitle: "Detalle del Vehículo",
+          href: null,
+        }}
+      />
+      <Tabs.Screen
+        name="car/(screens)/CarScreens/Appointments"
+        options={{
+          headerShown: true,
+          headerTitle: "Citas",
+          href: null,
+        }}
+      />
+      <Tabs.Screen
+        name="car/(screens)/CarScreens/Maintenancie"
+        options={{
+          headerShown: true,
+          headerTitle: "Mantenimiento",
+          href: null,
+        }}
+      />
+      <Tabs.Screen
+        name="car/(screens)/CarScreens/Papers"
+        options={{
+          headerShown: true,
+          headerTitle: "Documentos",
+          href: null,
         }}
       />
     </Tabs>
