@@ -1,2 +1,1 @@
-import userCarHome from "@/src/presentation/screens/user/car/home";
-export default userCarHome;
+export {default} from "@/src/presentation/screens/user/car/home";
