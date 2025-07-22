@@ -1,8 +1,8 @@
-import { Tabs } from "expo-router"; // Importa el componente Tabs de Expo Router para la navegación por pestañas.
-import { AntDesign } from "@expo/vector-icons"; // Importa el conjunto de iconos AntDesign de @expo/vector-icons.
-import { FontAwesome5 } from "@expo/vector-icons"; // Importa el conjunto de iconos FontAwesome 5 de @expo/vector-icons.
-import { useColorScheme } from "@/components/useColorScheme"; // Hook personalizado para detectar el esquema de color del sistema (claro/oscuro).
-import Colors from "@/constants/Colors"; // Importa un objeto que contiene definiciones de colores para temas claro y oscuro.
+import { Tabs, Link, useRouter } from "expo-router"; // Importa Link y useRouter de expo-router para la navegación.
+import { AntDesign, FontAwesome5, Ionicons } from "@expo/vector-icons"; // Importa Ionicons para el icono de campana.
+// import { useColorScheme } => "@/components/useColorScheme"; // Comentado: Este componente no está disponible.
+import Colors from "@/constants/Colors";
+import { Pressable, View } from "react-native"; // Importa Pressable y View para hacer el icono interactivo.
 
 /**
  * @function TabBarIcon
@@ -23,14 +23,44 @@ function TabBarIcon(props: {
 }
 
 /**
+ * @function NotificationBell
+ * @description Componente para el icono de campana de notificaciones en el encabezado.
+ * Al presionarlo, navega a la pantalla de notificaciones.
+ * @param {object} props - Las propiedades del componente.
+ * @param {string} props.colorScheme - El esquema de color actual (light/dark).
+ * @param {object} props.router - El objeto router de Expo Router para la navegación.
+ * @returns {JSX.Element} Un componente Pressable con el icono de notificación.
+ */
+function NotificationBell({ colorScheme, router }) {
+  return (
+    <Pressable onPress={() => router.push("/notifications")}>
+      {({ pressed }) => (
+        <Ionicons
+          name="notifications-outline" // Icono de campana de Ionicons
+          size={25}
+          color={Colors[colorScheme ?? 'light'].text} // Color del icono basado en el tema
+          style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }} // Estilo para el icono, con opacidad al presionar
+        />
+      )}
+    </Pressable>
+  );
+}
+
+
+/**
  * @function UserLayout
  * @description Componente principal que define la estructura de navegación por pestañas para el usuario.
  * Utiliza Expo Router para crear un navegador de pestañas inferior y gestiona las rutas visibles y ocultas.
+ * Incluye un icono de notificaciones en el encabezado de las pestañas "Inicio", "Vehículo" y "Perfil".
  * @returns {JSX.Element} Un componente de navegación por pestañas.
  */
 export default function UserLayout() {
-  // Obtiene el esquema de color actual del sistema (light o dark).
-  const colorScheme = useColorScheme();
+  // Se ha eliminado la importación de useColorScheme.
+  // Se establece un esquema de color por defecto a 'light'.
+  // Si necesitas soporte para dark mode, deberás implementar tu propio useColorScheme o usar una biblioteca.
+  const colorScheme = 'light'; 
+  // Inicializa el hook useRouter para la navegación programática.
+  const router = useRouter();
 
   return (
     <Tabs
@@ -41,24 +71,32 @@ export default function UserLayout() {
         tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
       }}
     >
-      {/* Pestaña "Vehículo" - Visible en la barra de pestañas */}
+      {/* Pestaña "Vehículo" - Visible en la barra de pestañas con icono de notificaciones */}
       <Tabs.Screen
         name="car/index" // Nombre de la ruta, mapeado a 'app/car/index.tsx'
         options={{
           title: "Vehículo", // Título de la pestaña que se muestra al usuario.
+          headerShown: true, // Asegura que el encabezado esté visible para mostrar el icono.
           // Función para renderizar el icono de la pestaña.
           tabBarIcon: ({ color }) => <TabBarIcon name="car" color={color} />,
+          // Define el componente a renderizar en el lado derecho del encabezado.
+          // Ahora usa el componente NotificationBell refactorizado.
+          headerRight: () => <NotificationBell colorScheme={colorScheme} router={router} />,
         }}
       />
-      {/* Pestaña "Inicio" - Visible en la barra de pestañas */}
+      {/* Pestaña "Inicio" - Visible en la barra de pestañas con icono de notificaciones */}
       <Tabs.Screen
         name="index" // Nombre de la ruta, mapeado a 'app/index.tsx'
         options={{
           title: "Inicio", // Título de la pestaña.
+          headerShown: true, // Asegura que el encabezado esté visible.
           // Renderiza un icono de casa de AntDesign.
           tabBarIcon: ({ color }) => (
             <AntDesign name="home" size={24} color={color} />
           ),
+          // Define el componente a renderizar en el lado derecho del encabezado.
+          // Ahora usa el componente NotificationBell refactorizado.
+          headerRight: () => <NotificationBell colorScheme={colorScheme} router={router} />,
         }}
       />
       {/* Pestaña "Emergencias" - Oculta de la barra de pestañas (`href: null`) */}
@@ -79,13 +117,17 @@ export default function UserLayout() {
           href: null, // Oculta la pestaña.
         }}
       />
-      {/* Pestaña "Perfil" - Visible en la barra de pestañas */}
+      {/* Pestaña "Perfil" - Visible en la barra de pestañas con icono de notificaciones */}
       <Tabs.Screen
         name="profile/index" // Ruta a la pantalla de perfil.
         options={{
           title: "Perfil", // Título de la pestaña.
+          headerShown: true, // Asegura que el encabezado esté visible.
           // Renderiza un icono de usuario.
           tabBarIcon: ({ color }) => <TabBarIcon name="user" color={color} />,
+          // Define el componente a renderizar en el lado derecho del encabezado.
+          // Ahora usa el componente NotificationBell refactorizado.
+          headerRight: () => <NotificationBell colorScheme={colorScheme} router={router} />,
         }}
       />
       {/* Pestaña "Configuración" - Oculta de la barra de pestañas */}
