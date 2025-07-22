@@ -1,9 +1,1 @@
-import { Text } from "react-native";
-
-export default function UserNotificationsHome(){
-    return (
-        <Text>
-            Pantalla de Notificaciones
-        </Text>
-    );
-}
+export { default } from "@/src/presentation/screens/user/notifications/HomeNotifications";

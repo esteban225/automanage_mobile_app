@@ -1,8 +1,10 @@
+import { Text, View } from "react-native";
+
 export default function ProductView() {
   return (
-    <div className="product-learning">
-      <h1>ProductView</h1>
-      <p>This is the Car Learning screen.</p>
-    </div>
+    <View className="product-learning">
+      <Text>ProductView</Text>
+      <Text>This is the Car Learning screen.</Text>
+    </View>
   );
 }

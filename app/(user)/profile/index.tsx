@@ -1,11 +1,1 @@
-import { Text } from "react-native";
-
-export default function UserProfileHome() {
-    return (
-        <>
-            <Text>
-                Pantalla de Perfil
-            </Text>
-        </>
-    );
-}
+export {default} from "@/src/presentation/screens/user/profile/home";
