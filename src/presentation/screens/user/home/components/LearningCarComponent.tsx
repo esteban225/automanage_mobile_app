@@ -1,4 +1,4 @@
-export default function CardComponent() {
+export default function LearningCar() {
   return (
     <div className="card-component">
       <h2>Card Component</h2>

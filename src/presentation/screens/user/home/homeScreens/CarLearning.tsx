@@ -1,8 +1,10 @@
+import { Text, View } from "react-native";
+
 export default function CarLearning() {
   return (
-    <div className="car-learning">
-      <h1>Car Learning</h1>
-      <p>This is the Car Learning screen.</p>
-    </div>
+    <View className="car-learning">
+      <Text>Car Learning</Text>
+      <Text>This is the Car Learning screen.</Text>
+    </View>
   );
 }
