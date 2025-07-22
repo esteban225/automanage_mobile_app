@@ -14,7 +14,7 @@ export class AuthRepositoryImpl implements AuthRepository {
   async login(credentials: AuthCredentials): Promise<User> {
     console.debug("Iniciando proceso de login con credenciales:", credentials);
 
-    const response = await axios.post("http://192.168.100.7:8000/api/auth/login", credentials);
+    const response = await axios.post("http://192.168.1.9:8001/api/auth/login", credentials);
     console.debug("Respuesta recibida del backend:", response.data);
 
     const data = response.data as {
@@ -63,7 +63,7 @@ export class AuthRepositoryImpl implements AuthRepository {
   async register(userData: RegisterUserDto): Promise<User> {
     console.debug("Enviando datos para registro de usuario:", userData);
 
-    const response = await axios.post("http://192.168.100.7:8000/api/auth/signup", userData);
+    const response = await axios.post("http://192.168.1.9:8001/api/auth/signup", userData);
 
     console.debug("Respuesta del registro:", response.data);
 
