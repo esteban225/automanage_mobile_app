@@ -19,6 +19,6 @@ export interface User {
   email: string;
   name: string;
   username: string;
-  role: 'admin' | 'user';
+  role: string;
   token?: string; // opcional, solo después del login
 }
