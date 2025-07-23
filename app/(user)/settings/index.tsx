@@ -1,11 +1,1 @@
-import { Text } from "react-native";
-
-export default function UserSettingsHome(){
-    return (
-        <>
-            <Text>
-                Pantalla de Configuración
-            </Text>
-        </>
-    );
-}
+export {default} from "@/src/presentation/screens/user/settings/home";

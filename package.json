@@ -19,7 +19,7 @@
     "@react-native-async-storage/async-storage": "^2.1.2",
     "@react-navigation/native": "^7.1.6",
     "automanage_mobile_app": "file:",
-    "axios": "^1.9.0",
+    "axios": "^1.10.0",
     "expo": "~53.0.9",
     "expo-font": "~13.3.1",
     "expo-linking": "~7.1.5",
@@ -37,7 +37,8 @@
     "react-native-reanimated": "~3.17.4",
     "react-native-safe-area-context": "5.4.0",
     "react-native-screens": "~4.10.0",
-    "react-native-web": "~0.20.0"
+    "react-native-web": "~0.20.0",
+    "expo-secure-store": "~14.2.3"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",

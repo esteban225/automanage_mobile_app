@@ -4,17 +4,19 @@ import axios from "axios";
 import { AuthCredentials } from "@/src/core/domain/dto/auth/AuthCredentials";
 import { jwtDecode } from "jwt-decode";
 import { RegisterUserDto } from "@/src/core/domain/dto/register/RegisterUserDto";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 /**
  * Implementación concreta del repositorio de autenticación (`AuthRepository`)
  * que utiliza llamadas HTTP (mediante axios) para comunicarse con un backend.
  */
+const urlApi = 'http://192.168.100.7:8000/api';
 export class AuthRepositoryImpl implements AuthRepository {
 
   async login(credentials: AuthCredentials): Promise<User> {
     console.debug("Iniciando proceso de login con credenciales:", credentials);
 
-    const response = await axios.post("http://192.168.1.9:8001/api/auth/login", credentials);
+    const response = await axios.post(` ${urlApi}/auth/login`, credentials);
     console.debug("Respuesta recibida del backend:", response.data);
 
     const data = response.data as {
@@ -28,6 +30,14 @@ export class AuthRepositoryImpl implements AuthRepository {
       };
       token: string;
     };
+
+    // Guardar el token en AsyncStorage
+    try {
+      await AsyncStorage.setItem("auth_token", data.token);
+      console.debug("Token guardado en AsyncStorage.");
+    } catch (error) {
+      console.error("Error al guardar el token en AsyncStorage:", error);
+    }
 
     // Decodificar token JWT para obtener el rol del usuario
     let role: 'admin' | 'user' | undefined = undefined;
@@ -50,7 +60,7 @@ export class AuthRepositoryImpl implements AuthRepository {
       username: data.user.username,
       email: data.user.email,
       name: data.user.nombre,
-      role: role || 'user', // Asignar 'user' por defecto si no se encuentra rol
+      role: role || 'user',
       token: data.token,
       address: data.user.direccion || '',
       phone: data.user.telefono || '',
@@ -63,7 +73,7 @@ export class AuthRepositoryImpl implements AuthRepository {
   async register(userData: RegisterUserDto): Promise<User> {
     console.debug("Enviando datos para registro de usuario:", userData);
 
-    const response = await axios.post("http://192.168.1.9:8001/api/auth/signup", userData);
+    const response = await axios.post(` ${urlApi}/auth/signup`, userData);
 
     console.debug("Respuesta del registro:", response.data);
 
