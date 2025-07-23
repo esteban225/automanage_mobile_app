@@ -1,8 +1,8 @@
 import { Text, View, TouchableOpacity, StyleSheet } from "react-native";
 import { useRouter } from "expo-router";
 import { useState } from "react";
-import ImageCar from "./components/ImageCar"; // Asegúrate de que este componente exista
-import ActionCircle from "./components/ActionCircle"; // Asegúrate de que este componente exista y esté actualizado
+import ImageCar from "./components/ImageCar";
+import ActionCircle from "./components/ActionCircle"; // nuevo componente
 
 export default function UserCarHome() {
   const router = useRouter();
@@ -26,6 +26,8 @@ export default function UserCarHome() {
 
   return (
     <View style={styles.container}>
+      <Text style={styles.title}>Pantalla de carros</Text>
+
       {/* Imagen con botones circulares alrededor */}
       <View style={styles.imageWrapper}>
         <ActionCircle visible={showCircles} onPress={handleCirclePress} />
@@ -34,7 +36,7 @@ export default function UserCarHome() {
         </TouchableOpacity>
       </View>
 
-      {/* Botones de navegación estilizados - Mantenidos según tu solicitud */}
+      {/* Botones de navegación estilizados */}
       <TouchableOpacity style={styles.button} onPress={() => router.push("/(user)/car/(screens)/CarScreens/Papers")}>
         <Text style={styles.buttonText}>Pagar todos los papeles del carro</Text>
       </TouchableOpacity>
@@ -57,9 +59,6 @@ export default function UserCarHome() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // Eliminamos 'justifyContent: "center"' globalmente para que el contenido fluya
-    // pero mantenemos 'alignItems' para centrar horizontalmente los elementos.
-    alignItems: 'center', // Centra los elementos hijos horizontalmente
     gap: 12,
     padding: 20,
     backgroundColor: "#E3FEF7", // fondo claro
@@ -72,22 +71,15 @@ const styles = StyleSheet.create({
     color: "#003C43", // color oscuro del título
   },
   imageWrapper: {
-    // Alinear la imagen y los círculos en el centro superior.
-    // 'alignSelf: "center"' para centrar el wrapper en el contenedor flexible.
-    alignSelf: "center",
-    alignItems: "center", // Centra la imagen dentro del wrapper
-    justifyContent: "center", // Asegura que ActionCircle se ancle al centro de ImageCar
-    marginBottom: 20, // Espacio entre la imagen/círculos y los botones de abajo
+    alignItems: "center",
+    marginBottom: 20,
     position: "relative", // clave para posicionar círculos sobre imagen
-    width: 200, // Ajusta el tamaño de tu ImageCar si no tiene un tamaño intrínseco
-    height: 200, // Ajusta el tamaño de tu ImageCar
   },
   button: {
     backgroundColor: "#135D66", // fondo de botón
     padding: 14,
     borderRadius: 8,
     marginVertical: 6,
-    width: '100%', // Para que los botones ocupen el ancho completo del padding del contenedor
   },
   buttonText: {
     color: "#FFFFFF", // texto blanco

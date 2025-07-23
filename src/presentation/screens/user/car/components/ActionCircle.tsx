@@ -25,7 +25,7 @@ const finalPositions = [
   { x: -100, y: 0 },   // Círculo Izquierdo: Mover hacia la izquierda (X negativo)
 ];
 
-const emojis = ["📄", "🔧", "📅", "💅"];
+const emojis = ["🚗", "🔧", "🛠️", "🧽"]; // Emojis para cada círculo
 
 export default function ActionCircle({ visible, onPress }: Props) {
   const animatedValue = useSharedValue(0);
