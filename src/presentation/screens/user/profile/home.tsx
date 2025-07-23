@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons'; // Si usas Expo, o @fortawesome/react-native-fontawesome para otros
+import { router } from 'expo-router';
 
 export default function Profile() {
   const user = {
@@ -19,8 +20,8 @@ export default function Profile() {
   };
 
   const handleSettings = () => {
-    // Lógica para navegar a la pantalla de configuración
-    console.log('Configuración presionado');
+ 
+    router.push('/(user)/settings')
   };
 
   return (
