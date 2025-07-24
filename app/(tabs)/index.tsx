@@ -3,7 +3,6 @@ import {
   Text,
   View,
   TouchableOpacity,
-  Alert,
   Image,
 } from "react-native";
 import { Link } from "expo-router";
@@ -11,16 +10,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect } from "react";
 
 export default function TabOneScreen() {
-  const handleDeleteUser = async () => {
-    try {
-      await AsyncStorage.removeItem("user");
-      console.log("[TabOneScreen] Usuario eliminado de AsyncStorage");
-      Alert.alert("Usuario eliminado del almacenamiento local.");
-    } catch (error) {
-      console.error("[TabOneScreen] Error eliminando usuario:", error);
-      Alert.alert("Error al eliminar el usuario");
-    }
-  };
 
   useEffect(() => {
     const checkUser = async () => {
@@ -59,14 +48,6 @@ export default function TabOneScreen() {
             <Text style={styles.buttonTextAlt}>Registrarse</Text>
           </TouchableOpacity>
         </Link>
-
-        {/* Botón para eliminar el usuario de AsyncStorage */}
-        <TouchableOpacity
-          style={styles.buttonDanger}
-          onPress={handleDeleteUser}
-        >
-          <Text style={styles.buttonText}>Eliminar Usuario</Text>
-        </TouchableOpacity>
       </View>
     </View>
   );
