@@ -1,92 +1,175 @@
-import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import Modal from 'react-native-modal';
+import { View, Text, StyleSheet, Pressable } from "react-native";
+import { useLocalSearchParams } from "expo-router";
+import { Ionicons } from "@expo/vector-icons"; // Asegúrate de tener esto instalado
 
-// Tipado de props
-interface MaintenancePopupProps {
-  isVisible: boolean;
-  onClose: () => void;
+export default function ModalActionCircle() {
+  const { name, lastChange, nextChange, description } = useLocalSearchParams();
+
+  const formatDate = (dateString: string | string[] | undefined) => {
+    if (!dateString) return "N/A";
+    const date = new Date(dateString as string);
+    return date.toLocaleDateString("es-CO", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  };
+
+  const getStatus = () => {
+    const today = new Date();
+    const next = new Date(nextChange as string);
+    const diffDays = Math.ceil((next.getTime() - today.getTime()) / (1000 * 3600 * 24));
+
+    if (diffDays > 30) {
+      return { status: "Al día", color: "#28a745", daysLeft: diffDays, icon: "checkmark-circle", action: "Todo OK" };
+    } else if (diffDays > 7) {
+      return { status: "Revisión Sugerida", color: "#ffc107", daysLeft: diffDays, icon: "warning", action: "Revisar" };
+    } else if (diffDays >= 0) {
+      return { status: "Cambio Urgente", color: "#dc3545", daysLeft: diffDays, icon: "alert-circle", action: "Cambiar" };
+    } else {
+      return { status: "Vencido", color: "#6c757d", daysLeft: diffDays, icon: "close-circle", action: "Urgente" };
+    }
+  };
+
+  const statusInfo = getStatus();
+  const progressPercent = Math.max(0, Math.min(100, (30 - statusInfo.daysLeft) / 30 * 100));
+
+  return (
+    <View style={styles.centeredView}>
+      <View style={styles.card}>
+        <Text style={styles.title}>{name}</Text>
+        <View style={styles.divider} />
+
+        <Text style={styles.description}>{description || "Sin descripción disponible."}</Text>
+
+        <View style={styles.detailBlock}>
+          <Text style={styles.label}>Último cambio:</Text>
+          <Text style={styles.value}>{formatDate(lastChange)}</Text>
+        </View>
+
+        <View style={styles.detailBlock}>
+          <Text style={styles.label}>Próximo cambio:</Text>
+          <Text style={styles.value}>{formatDate(nextChange)}</Text>
+        </View>
+
+        <View style={[styles.statusContainer, { backgroundColor: statusInfo.color + "20" }]}>
+          <Ionicons name={statusInfo.icon as any} size={22} color={statusInfo.color} style={styles.statusIcon} />
+          <Text style={[styles.statusText, { color: statusInfo.color }]}>{statusInfo.status}</Text>
+        </View>
+
+        <View style={styles.progressContainer}>
+          <View style={[styles.progressBar, { width: `${progressPercent}%`, backgroundColor: statusInfo.color }]} />
+        </View>
+
+        <Text style={styles.daysLeft}>
+          {statusInfo.daysLeft >= 0
+            ? `Faltan ${statusInfo.daysLeft} días para el cambio.`
+            : `Pasaron ${Math.abs(statusInfo.daysLeft)} días desde la fecha programada.`}
+        </Text>
+
+        <Pressable style={[styles.button, { backgroundColor: statusInfo.color }]} onPress={() => console.log("Acción:", statusInfo.action)}>
+          <Text style={styles.buttonText}>{statusInfo.action}</Text>
+        </Pressable>
+      </View>
+    </View>
+  );
 }
 
-const MaintenancePopup: React.FC<MaintenancePopupProps> = ({ isVisible, onClose }) => {
-  return (
-    <Modal
-      isVisible={isVisible}
-      onBackdropPress={onClose}
-      backdropOpacity={0.4}
-      // useNativeDriver is not strictly needed without MotiView, but can be kept for Modal performance
-      useNativeDriver
-    >
-      <View style={styles.container}>
-        <View style={styles.box}>
-          <View style={styles.section}>
-            <Text style={styles.text}>Nombre</Text>
-          </View>
-
-          <View style={styles.section}>
-            <Text style={styles.text}>Último cambio que se hizo</Text>
-          </View>
-
-          <View style={styles.section}>
-            <Text style={styles.text}>Próxima fecha de cambio</Text>
-          </View>
-
-          <View style={styles.statusSection}>
-            <View style={styles.statusItem}>
-              <View style={styles.circle} />
-              <Text>Al día</Text>
-            </View>
-            <View style={styles.statusItem}>
-              <View style={styles.circle} />
-              <Text>Deberías revisarlo</Text>
-            </View>
-            <View style={styles.statusItem}>
-              <View style={styles.circle} />
-              <Text>Cambio urgente</Text>
-            </View>
-          </View>
-        </View>
-      </View>
-    </Modal>
-  );
-};
-
-export default MaintenancePopup;
-
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: '#fdd9b5',
-    borderRadius: 16,
-    padding: 24,
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#EAFDFC",
+    paddingHorizontal: 20,
   },
-  box: {
-    width: '100%',
+  card: {
+    width: "100%",
+    backgroundColor: "#FFFFFF",
+    borderRadius: 18,
+    padding: 26,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 6,
+    elevation: 6,
   },
-  section: {
-    backgroundColor: '#fff',
-    padding: 16,
-    borderRadius: 10,
-    marginBottom: 12,
-    alignItems: 'center',
+  title: {
+    fontSize: 24,
+    fontWeight: "700",
+    color: "#134E4A",
+    marginBottom: 10,
+    textAlign: "center",
   },
-  text: {
+  divider: {
+    height: 1,
+    backgroundColor: "#DDE2E2",
+    marginVertical: 14,
+  },
+  description: {
     fontSize: 16,
+    color: "#495057",
+    marginBottom: 18,
+    textAlign: "center",
   },
-  statusSection: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+  detailBlock: {
+    marginBottom: 10,
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  label: {
+    fontSize: 16,
+    color: "#6C757D",
+  },
+  value: {
+    fontSize: 16,
+    fontWeight: "600",
+    color: "#212529",
+  },
+  statusContainer: {
+    marginTop: 20,
+    borderRadius: 20,
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  statusIcon: {
+    marginRight: 8,
+  },
+  statusText: {
+    fontSize: 18,
+    fontWeight: "700",
+    textTransform: "uppercase",
+  },
+  progressContainer: {
+    height: 10,
+    width: "100%",
+    backgroundColor: "#E9ECEF",
+    borderRadius: 20,
     marginTop: 12,
-    paddingHorizontal: 8,
+    overflow: "hidden",
   },
-  statusItem: {
-    alignItems: 'center',
+  progressBar: {
+    height: "100%",
+    borderRadius: 20,
   },
-  circle: {
-    width: 16,
-    height: 16,
-    borderRadius: 8,
-    borderWidth: 2,
-    borderColor: '#000',
-    marginBottom: 4,
+  daysLeft: {
+    marginTop: 16,
+    textAlign: "center",
+    fontSize: 15,
+    color: "#495057",
+  },
+  button: {
+    marginTop: 20,
+    paddingVertical: 12,
+    borderRadius: 12,
+    alignItems: "center",
+  },
+  buttonText: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "700",
   },
 });

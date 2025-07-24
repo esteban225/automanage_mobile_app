@@ -1,12 +1,18 @@
 import React from "react";
-import { Image, StyleSheet, View } from "react-native";
+import { Image, StyleSheet, View, Dimensions } from "react-native";
+
+// Imagen local
+const car = require("@/assets/images/car.jpg"); // O usa ruta relativa si no te funciona el alias
+
+const windowWidth = Dimensions.get("window").width;
 
 export default function ImageCar() {
   return (
     <View style={styles.imageContainer}>
       <Image
-        source={{ uri: "https://via.placeholder.com/120" }} // Cambia esto por una imagen real más adelante
+        source={car} // Imagen local cargada con require
         style={styles.image}
+        resizeMode="cover"
       />
     </View>
   );
@@ -14,18 +20,22 @@ export default function ImageCar() {
 
 const styles = StyleSheet.create({
   imageContainer: {
-    backgroundColor: "#E3FEF7", // Fondo claro
-    padding: 16,
-    borderRadius: 12,
+    backgroundColor: "#F0FDFB",
+    padding: 20,
+    borderRadius: 20,
+    alignItems: "center",
+    justifyContent: "center",
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 5,
+    shadowRadius: 5,
+    elevation: 4,
   },
   image: {
-    width: 120,
-    height: 120,
-    borderRadius: 12,
+    width: windowWidth * 0.45,
+    height: windowWidth * 0.45,
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: "#CCEAE7",
   },
 });

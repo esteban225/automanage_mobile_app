@@ -1,6 +1,16 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Switch, Alert } from 'react-native';
-import { Ionicons } from '@expo/vector-icons'; // Para los iconos, asumiendo que usas Expo o tienes @expo/vector-icons instalado.
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+  Switch,
+  Alert,
+} from "react-native";
+import { Ionicons } from "@expo/vector-icons"; // Para los iconos, asumiendo que usas Expo o tienes @expo/vector-icons instalado.
+import { router } from "expo-router";
+import { useAuth } from "@/src/presentation/providers/AuthProvider";
 
 export default function Settings() {
   // Estados para los toggles de configuración
@@ -8,7 +18,8 @@ export default function Settings() {
   const [darkModeEnabled, setDarkModeEnabled] = useState(false); // Podrías integrar esto con useColorScheme si lo tuvieras
   const [locationServicesEnabled, setLocationServicesEnabled] = useState(false);
 
-  // Función para manejar el cierre de sesión
+  const { logout } = useAuth(); // ✅ Importante: obtenemos logout del contexto
+
   const handleLogout = () => {
     Alert.alert(
       "Cerrar Sesión",
@@ -16,16 +27,20 @@ export default function Settings() {
       [
         {
           text: "Cancelar",
-          style: "cancel"
+          style: "cancel",
         },
         {
           text: "Sí, Cerrar Sesión",
-          onPress: () => {
-            // Lógica para cerrar la sesión del usuario (ej. limpiar token de autenticación)
-            console.log("Sesión cerrada");
-            // Aquí podrías redirigir al usuario a la pantalla de inicio de sesión
-          }
-        }
+          onPress: async () => {
+            try {
+              await logout(); // ✅ usamos la función del contexto
+              router.replace("/(tabs)"); // Redirige a la pantalla de login
+            } catch (error) {
+              Alert.alert("Error", "No se pudo cerrar la sesión.");
+              console.error("Error al cerrar sesión:", error);
+            }
+          },
+        },
       ]
     );
   };
@@ -41,21 +56,30 @@ export default function Settings() {
     <ScrollView style={styles.container}>
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Cuenta</Text>
-        <TouchableOpacity style={styles.option} onPress={() => navigateTo('profile-edit')}>
+        <TouchableOpacity
+          style={styles.option}
+          onPress={() => navigateTo("profile-edit")}
+        >
           <View style={styles.optionContent}>
             <Ionicons name="person-outline" size={24} color="#555" />
             <Text style={styles.optionText}>Editar Perfil</Text>
           </View>
           <Ionicons name="chevron-forward-outline" size={20} color="#ccc" />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.option} onPress={() => navigateTo('change-password')}>
+        <TouchableOpacity
+          style={styles.option}
+          onPress={() => navigateTo("change-password")}
+        >
           <View style={styles.optionContent}>
             <Ionicons name="lock-closed-outline" size={24} color="#555" />
             <Text style={styles.optionText}>Cambiar Contraseña</Text>
           </View>
           <Ionicons name="chevron-forward-outline" size={20} color="#ccc" />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.option} onPress={() => navigateTo('privacy-settings')}>
+        <TouchableOpacity
+          style={styles.option}
+          onPress={() => navigateTo("privacy-settings")}
+        >
           <View style={styles.optionContent}>
             <Ionicons name="shield-checkmark-outline" size={24} color="#555" />
             <Text style={styles.optionText}>Privacidad</Text>
@@ -109,16 +133,26 @@ export default function Settings() {
 
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Soporte</Text>
-        <TouchableOpacity style={styles.option} onPress={() => navigateTo('help-center')}>
+        <TouchableOpacity
+          style={styles.option}
+          onPress={() => navigateTo("help-center")}
+        >
           <View style={styles.optionContent}>
             <Ionicons name="help-circle-outline" size={24} color="#555" />
             <Text style={styles.optionText}>Centro de Ayuda</Text>
           </View>
           <Ionicons name="chevron-forward-outline" size={20} color="#ccc" />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.option} onPress={() => navigateTo('about-app')}>
+        <TouchableOpacity
+          style={styles.option}
+          onPress={() => navigateTo("about-app")}
+        >
           <View style={styles.optionContent}>
-            <Ionicons name="information-circle-outline" size={24} color="#555" />
+            <Ionicons
+              name="information-circle-outline"
+              size={24}
+              color="#555"
+            />
             <Text style={styles.optionText}>Acerca de</Text>
           </View>
           <Ionicons name="chevron-forward-outline" size={20} color="#ccc" />
@@ -137,15 +171,15 @@ export default function Settings() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f0f2f5', // Un gris claro para el fondo
+    backgroundColor: "#f0f2f5", // Un gris claro para el fondo
     paddingVertical: 10,
   },
   section: {
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     marginHorizontal: 15,
     marginVertical: 10,
     borderRadius: 10,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.1,
     shadowRadius: 2,
@@ -153,46 +187,46 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 18,
-    fontWeight: 'bold',
-    color: '#333',
+    fontWeight: "bold",
+    color: "#333",
     padding: 15,
     borderBottomWidth: 1,
-    borderBottomColor: '#eee',
+    borderBottomColor: "#eee",
   },
   option: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     paddingVertical: 15,
     paddingHorizontal: 15,
     borderBottomWidth: 1,
-    borderBottomColor: '#eee',
+    borderBottomColor: "#eee",
   },
   optionContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   optionText: {
     fontSize: 16,
-    color: '#555',
+    color: "#555",
     marginLeft: 10,
   },
   logoutButton: {
-    backgroundColor: '#ff4d4d', // Rojo para el botón de cerrar sesión
+    backgroundColor: "#ff4d4d", // Rojo para el botón de cerrar sesión
     paddingVertical: 15,
     borderRadius: 10,
-    alignItems: 'center',
+    alignItems: "center",
     marginHorizontal: 15,
     marginVertical: 20,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
   },
   logoutButtonText: {
-    color: '#fff',
+    color: "#fff",
     fontSize: 18,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
 });

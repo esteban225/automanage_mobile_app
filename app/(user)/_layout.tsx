@@ -38,14 +38,13 @@ function NotificationBell({ colorScheme, router }) {
         <Ionicons
           name="notifications-outline" // Icono de campana de Ionicons
           size={25}
-          color={Colors[colorScheme ?? 'light'].text} // Color del icono basado en el tema
+          color={Colors[colorScheme ?? "light"].text} // Color del icono basado en el tema
           style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }} // Estilo para el icono, con opacidad al presionar
         />
       )}
     </Pressable>
   );
 }
-
 
 /**
  * @function UserLayout
@@ -58,7 +57,7 @@ export default function UserLayout() {
   // Se ha eliminado la importación de useColorScheme.
   // Se establece un esquema de color por defecto a 'light'.
   // Si necesitas soporte para dark mode, deberás implementar tu propio useColorScheme o usar una biblioteca.
-  const colorScheme = 'light'; 
+  const colorScheme = "light";
   // Inicializa el hook useRouter para la navegación programática.
   const router = useRouter();
 
@@ -81,7 +80,9 @@ export default function UserLayout() {
           tabBarIcon: ({ color }) => <TabBarIcon name="car" color={color} />,
           // Define el componente a renderizar en el lado derecho del encabezado.
           // Ahora usa el componente NotificationBell refactorizado.
-          headerRight: () => <NotificationBell colorScheme={colorScheme} router={router} />,
+          headerRight: () => (
+            <NotificationBell colorScheme={colorScheme} router={router} />
+          ),
         }}
       />
       {/* Pestaña "Inicio" - Visible en la barra de pestañas con icono de notificaciones */}
@@ -96,7 +97,9 @@ export default function UserLayout() {
           ),
           // Define el componente a renderizar en el lado derecho del encabezado.
           // Ahora usa el componente NotificationBell refactorizado.
-          headerRight: () => <NotificationBell colorScheme={colorScheme} router={router} />,
+          headerRight: () => (
+            <NotificationBell colorScheme={colorScheme} router={router} />
+          ),
         }}
       />
       {/* Pestaña "Emergencias" - Oculta de la barra de pestañas (`href: null`) */}
@@ -127,7 +130,9 @@ export default function UserLayout() {
           tabBarIcon: ({ color }) => <TabBarIcon name="user" color={color} />,
           // Define el componente a renderizar en el lado derecho del encabezado.
           // Ahora usa el componente NotificationBell refactorizado.
-          headerRight: () => <NotificationBell colorScheme={colorScheme} router={router} />,
+          headerRight: () => (
+            <NotificationBell colorScheme={colorScheme} router={router} />
+          ),
         }}
       />
       {/* Pestaña "Configuración" - Oculta de la barra de pestañas */}
@@ -182,6 +187,14 @@ export default function UserLayout() {
         options={{
           headerShown: true, // Muestra el encabezado.
           headerTitle: "Factura", // Título del encabezado.
+          href: null, // Oculta la pestaña.
+        }}
+      />
+      <Tabs.Screen
+        name="car/(screens)/CarScreens/ModalActionCircle" // Ruta a la pantalla de factura del vehículo.
+        options={{
+          headerShown: true, // Muestra el encabezado.
+          headerTitle: "Info", // Título del encabezado.
           href: null, // Oculta la pestaña.
         }}
       />
