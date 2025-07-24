@@ -10,7 +10,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
  * Implementación concreta del repositorio de autenticación (`AuthRepository`)
  * que utiliza llamadas HTTP (mediante axios) para comunicarse con un backend.
  */
-const urlApi = 'http://192.168.100.7:8000/api';
+const urlApi = 'http://192.168.1.9:8001/api';
 export class AuthRepositoryImpl implements AuthRepository {
 
   async login(credentials: AuthCredentials): Promise<User> {

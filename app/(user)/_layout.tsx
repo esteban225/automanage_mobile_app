@@ -177,6 +177,14 @@ export default function UserLayout() {
           href: null, // Oculta la pestaña.
         }}
       />
+      <Tabs.Screen
+        name="car/(screens)/CarScreens/Invoice" // Ruta a la pantalla de factura del vehículo.
+        options={{
+          headerShown: true, // Muestra el encabezado.
+          headerTitle: "Factura", // Título del encabezado.
+          href: null, // Oculta la pestaña.
+        }}
+      />
       {/* ------------------------------------------
         Pestañas del módulo de inicio (rutas anidadas y ocultas)
         Estas pantallas son accesibles dentro del flujo del módulo 'home'
