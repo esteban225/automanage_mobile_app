@@ -1,9 +1,1 @@
-import { Text } from "react-native";
-
-export default function UserEmergencyHome (){
-    return(
-        <Text>
-            Pantalla de Emergencias
-        </Text>
-    )
-}
+export {default} from "@/src/presentation/screens/user/emergency/home";
