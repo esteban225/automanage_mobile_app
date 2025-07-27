@@ -40,15 +40,15 @@ const styles = StyleSheet.create({
   },
   decorativeBackground: {
     position: "absolute",
-    width: windowWidth * 0.7,
-    height: windowWidth * 0.7,
+    width: windowWidth * 0.5,
+    height: windowWidth * 0.5,
     borderRadius: 100,
     transform: [{ rotate: "8deg" }],
     opacity: 0.4,
     zIndex: 0,
   },
   image: {
-    width: windowWidth * 0.6,
+    width: windowWidth * 0.5,
     height: undefined,
     aspectRatio: 371 / 188,
     zIndex: -9,

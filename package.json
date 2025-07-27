@@ -17,6 +17,7 @@
   "dependencies": {
     "@expo/vector-icons": "^14.1.0",
     "@react-native-async-storage/async-storage": "^2.1.2",
+    "@react-native-community/datetimepicker": "8.4.1",
     "@react-native-picker/picker": "^2.11.1",
     "@react-navigation/native": "^7.1.6",
     "automanage_mobile_app": "file:",
@@ -32,6 +33,7 @@
     "expo-system-ui": "~5.0.7",
     "expo-web-browser": "~14.1.6",
     "jwt-decode": "^4.0.0",
+    "moment": "^2.30.1",
     "moti": "^0.30.0",
     "react": "19.0.0",
     "react-dom": "19.0.0",

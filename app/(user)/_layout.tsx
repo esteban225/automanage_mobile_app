@@ -63,11 +63,20 @@ export default function UserLayout() {
 
   return (
     <Tabs
-      // Opciones globales aplicadas a todas las pantallas dentro de este navegador de pestañas.
       screenOptions={{
-        // Define el color de los iconos y etiquetas de las pestañas activas.
-        // Utiliza el esquema de color detectado; si es nulo, por defecto usa 'light'.
         tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
+        tabBarInactiveTintColor: Colors[colorScheme ?? "light"].tabIconDefault,
+        tabBarStyle: {
+          backgroundColor: Colors[colorScheme ?? "light"].background,
+          borderTopColor: Colors[colorScheme ?? "light"].tabIconDefault,
+        },
+        headerStyle: {
+          backgroundColor: Colors[colorScheme ?? "light"].background,
+        },
+        headerTitleStyle: {
+          color: Colors[colorScheme ?? "light"].text,
+        },
+        headerTintColor: Colors[colorScheme ?? "light"].text,
       }}
     >
       {/* Pestaña "Vehículo" - Visible en la barra de pestañas con icono de notificaciones */}

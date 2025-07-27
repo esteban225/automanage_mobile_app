@@ -86,7 +86,7 @@ export default function UserHome() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f8f8f8",
+    backgroundColor: "#FEFAE0", // fondo suave
   },
   contentContainer: {
     padding: 20,
@@ -96,7 +96,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: Platform.select({ ios: 50, android: 30 }),
     right: 20,
-    backgroundColor: "#dc3545",
+    backgroundColor: "#dc3545", // se mantiene por ser alerta
     borderRadius: 30,
     width: 50,
     height: 50,
@@ -115,13 +115,13 @@ const styles = StyleSheet.create({
   },
   greetingText: {
     fontSize: 18,
-    color: "#666",
+    color: "#819067", // tono medio
     marginTop: 8,
   },
   mainTitle: {
     fontSize: 26,
     fontWeight: "bold",
-    color: "#333",
+    color: "#0A400C",
     textAlign: "center",
     marginTop: 4,
   },
@@ -139,6 +139,7 @@ const styles = StyleSheet.create({
     padding: 20,
     justifyContent: "space-between",
     alignItems: "center",
+    backgroundColor: "#819067", // para resaltar con texto claro
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
@@ -152,10 +153,10 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: "600",
     textAlign: "center",
-    color: "#fff",
+    color: "#FEFAE0", // texto claro sobre fondo verde
   },
   statusCard: {
-    backgroundColor: "#ffffff",
+    backgroundColor: "#B1AB86",
     borderRadius: 15,
     padding: 15,
     marginBottom: 25,
@@ -168,7 +169,7 @@ const styles = StyleSheet.create({
   sectionHeader: {
     fontSize: 18,
     fontWeight: "bold",
-    color: "#333",
+    color: "#0A400C",
     marginBottom: 12,
   },
   statusRow: {
@@ -179,10 +180,10 @@ const styles = StyleSheet.create({
   statusText: {
     marginLeft: 10,
     fontSize: 15,
-    color: "#555",
+    color: "#333333", // buena visibilidad
   },
   quickLinksSection: {
-    backgroundColor: "#fff",
+    backgroundColor: "#B1AB86",
     borderRadius: 15,
     padding: 15,
     shadowColor: "#000",
@@ -197,13 +198,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingVertical: 12,
     borderBottomWidth: 1,
-    borderBottomColor: "#eee",
+    borderBottomColor: "#CFC9A5", // divisoria más acorde a paleta
     justifyContent: "space-between",
   },
   quickLinkText: {
     flex: 1,
     fontSize: 16,
-    color: "#555",
+    color: "#333333", // texto oscuro y legible
     marginLeft: 10,
   },
 });

@@ -103,7 +103,7 @@ export default function UserCarHome() {
               key={i}
               style={styles.button}
               onPress={() =>
-                router.push(`/(user)/car/(screens)/CarScreens/${btn.route}`)
+                router.push(`../(user)/car/(screens)/CarScreens/${btn.route}`)
               }
             >
               <Text style={styles.buttonText}>{btn.text}</Text>
