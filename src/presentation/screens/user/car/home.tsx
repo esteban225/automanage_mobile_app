@@ -25,71 +25,79 @@ export default function UserCarHome() {
 
   const toggleCircles = () => setShowCircles((prev) => !prev);
 
+  const maintenancePoints = [
+    {
+      name: "Sistema de frenos, llantas y luces",
+      lastChange: "2024-12-01",
+      nextChange: "2025-08-30",
+      description:
+        "Revisión y mantenimiento de componentes críticos de seguridad.",
+    },
+    {
+      name: "Aceites, correa de distribución, filtros y refrigerante",
+      lastChange: "2025-05-01",
+      nextChange: "2025-07-28",
+      description:
+        "Mantenimiento preventivo para el buen funcionamiento del motor.",
+    },
+    {
+      name: "Citas y revisiones programadas",
+      lastChange: "2025-06-15",
+      nextChange: "2025-08-01",
+      description: "Calendario de citas importantes para tu vehículo.",
+    },
+    {
+      name: "Arreglos estéticos y limpieza",
+      lastChange: "2025-04-10",
+      nextChange: "2025-08-15",
+      description: "Detalles y limpieza para mantener tu carro impecable.",
+    },
+  ];
+
   const handleCirclePress = (index: number) => {
-    const maintenancePoints = [
-      {
-        name: "Sistema de frenos, llantas y luces",
-        lastChange: "2024-12-01",
-        nextChange: "2025-08-30",
-        description: "Revisión y mantenimiento de componentes críticos de seguridad.",
-      },
-      {
-        name: "Aceites, correa de distribución, filtros y refrigerante",
-        lastChange: "2025-05-01",
-        nextChange: "2025-07-28",
-        description: "Mantenimiento preventivo para el buen funcionamiento del motor.",
-      },
-      {
-        name: "Citas y revisiones programadas",
-        lastChange: "2025-06-15",
-        nextChange: "2025-08-01",
-        description: "Calendario de citas importantes para tu vehículo.",
-      },
-      {
-        name: "Arreglos estéticos y limpieza",
-        lastChange: "2025-04-10",
-        nextChange: "2025-08-15",
-        description: "Detalles y limpieza para mantener tu carro impecable.",
-      },
-    ];
-
     const item = maintenancePoints[index];
-
     router.push({
       pathname: "/(user)/car/(screens)/CarScreens/ModalActionCircle",
       params: {
         name: item.name,
         lastChange: item.lastChange,
         nextChange: item.nextChange,
+        description: item.description,
       },
     });
   };
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <ScrollView contentContainerStyle={styles.container}>
-        
-        {/* Car Info Card */}
+      <ScrollView
+        contentContainerStyle={styles.container}
+        showsVerticalScrollIndicator={false}
+      >
+        {/* Tarjeta de información del vehículo */}
         <View style={styles.card}>
-          <Text style={styles.carTitle}>{`${carInfo.make} ${carInfo.model}`}</Text>
-          <Text style={styles.carSubtitle}>{`${carInfo.year} • ${carInfo.licensePlate}`}</Text>
+          <Text
+            style={styles.carTitle}
+          >{`${carInfo.make} ${carInfo.model}`}</Text>
+          <Text
+            style={styles.carSubtitle}
+          >{`${carInfo.year} • ${carInfo.licensePlate}`}</Text>
         </View>
 
-        {/* Image + Circles */}
-        <View style={styles.imageWrapper}>
+        <TouchableOpacity
+          onPress={toggleCircles}
+          activeOpacity={0.9}
+          style={styles.imageWrapper}
+        >
+          <ImageCar />
           <ActionCircle visible={showCircles} onPress={handleCirclePress} />
-          <TouchableOpacity onPress={toggleCircles} activeOpacity={0.85}>
-            <ImageCar />
-          </TouchableOpacity>
-        </View>
+        </TouchableOpacity>
 
-        {/* Action Buttons */}
+        {/* Botones de acción */}
         <View style={styles.buttonsContainer}>
           {[
             { text: "Pagar Papeles del Carro", route: "Papers" },
             { text: "Mantenimiento del Vehículo", route: "Maintenancie" },
             { text: "Citas para el Vehículo", route: "Appointments" },
-            { text: "Arreglos Estéticos y Limpieza", route: "Detailing" },
           ].map((btn, i) => (
             <TouchableOpacity
               key={i}
@@ -106,64 +114,65 @@ export default function UserCarHome() {
     </SafeAreaView>
   );
 }
-
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: "#E3FDFD", // azul clarito
+    backgroundColor: "#F0F4F8", // fondo neutro
   },
   container: {
-    paddingHorizontal: 20,
+    paddingHorizontal: 24,
     paddingTop: Platform.OS === "android" ? 30 : 10,
     paddingBottom: 40,
   },
   card: {
     backgroundColor: "#FFFFFF",
-    borderRadius: 16,
-    paddingVertical: 20,
-    paddingHorizontal: 24,
+    borderRadius: 20,
+    padding: 20,
     alignItems: "center",
     marginBottom: 30,
     shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.08,
-    shadowRadius: 6,
-    elevation: 3,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 4,
   },
   carTitle: {
-    fontSize: 26,
-    fontWeight: "700",
-    color: "#134E4A",
-    marginBottom: 4,
+    fontSize: 28,
+    fontWeight: "bold",
+    color: "#1F2937", // gris oscuro
+    marginBottom: 6,
   },
   carSubtitle: {
     fontSize: 16,
-    color: "#3F8781",
+    color: "#6B7280", // gris claro
     fontWeight: "500",
   },
   imageWrapper: {
+    marginTop: 44,
+    marginBottom: 40,
     alignItems: "center",
-    marginBottom: 28,
+    justifyContent: "center",
   },
   buttonsContainer: {
+    marginTop: 44,
     gap: 16,
   },
   button: {
-    backgroundColor: "#135D66",
+    backgroundColor: "#2563EB", // azul moderno
     paddingVertical: 16,
-    paddingHorizontal: 20,
     borderRadius: 14,
     alignItems: "center",
     justifyContent: "center",
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.12,
-    shadowRadius: 5,
-    elevation: 2,
+    shadowOpacity: 0.15,
+    shadowRadius: 4,
+    elevation: 3,
   },
   buttonText: {
     color: "#FFFFFF",
     fontSize: 16,
     fontWeight: "600",
+    letterSpacing: 0.3,
   },
 });

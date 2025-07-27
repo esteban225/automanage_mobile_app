@@ -1,42 +1,54 @@
 import React, { useEffect } from "react";
-import { Text, TouchableOpacity, StyleSheet, View } from "react-native";
+import {
+  TouchableOpacity,
+  StyleSheet,
+  View,
+  Platform,
+  useWindowDimensions,
+} from "react-native";
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
   withTiming,
-  withSpring, // Agregado para el efecto de resorte
+  withSpring,
   Easing,
-  interpolate, // Agregado para la interpolación de valores
+  interpolate,
 } from "react-native-reanimated";
+import { FontAwesome5, MaterialIcons, Ionicons, Entypo } from "@expo/vector-icons";
 
 interface Props {
   visible: boolean;
   onPress: (index: number) => void;
 }
 
-// Define las posiciones FINALES de los círculos alrededor del centro de la imagen.
-// Estos valores son cruciales y DEBES AJUSTARLOS para que no se superpongan
-// con la imagen ni con los botones de navegación de abajo.
-// Las coordenadas (x, y) son relativas al centro del 'imageWrapper' en UserCarHome.
-const finalPositions = [
-  { x: 0, y: -100 },   // Círculo Superior: Mover hacia arriba (Y negativo)
-  { x: 100, y: 0 },    // Círculo Derecho: Mover hacia la derecha (X positivo)
-  { x: 0, y: 100 },    // Círculo Inferior: Mover hacia abajo (Y positivo)
-  { x: -100, y: 0 },   // Círculo Izquierdo: Mover hacia la izquierda (X negativo)
+const icons = [
+  <FontAwesome5 name="car" size={28} color="#001D1A" />,
+  <MaterialIcons name="build" size={28} color="#001D1A" />,
+  <Ionicons name="construct" size={28} color="#001D1A" />,
+  <Entypo name="water" size={28} color="#001D1A" />,
 ];
 
-const emojis = ["🚗", "🔧", "🛠️", "🧽"]; // Emojis para cada círculo
+const neonColors = ["#00FFC6", "#FF00C8", "#00BFFF", "#FFD700"];
+const CIRCLE_SIZE = 70;
+const BORDER_RADIUS = CIRCLE_SIZE / 2;
 
 export default function ActionCircle({ visible, onPress }: Props) {
   const animatedValue = useSharedValue(0);
+  const { width, height } = useWindowDimensions();
+
+  // Posiciones relativas al tamaño de la pantalla
+  const finalPositions = [
+    { x: 0, y: -height * 0.14 }, // Arriba
+    { x: width * 0.37, y: 0 },    // Derecha
+    { x: 0, y: height * 0.13 },  // Abajo
+    { x: -width * 0.37, y: 0 },   // Izquierda
+  ];
 
   useEffect(() => {
     animatedValue.value = withSpring(visible ? 1 : 0, {
       damping: 10,
       stiffness: 100,
       mass: 0.5,
-      restDisplacementThreshold: 0.01,
-      restSpeedThreshold: 0.01,
     });
   }, [visible]);
 
@@ -44,25 +56,9 @@ export default function ActionCircle({ visible, onPress }: Props) {
     <>
       {finalPositions.map((pos, index) => {
         const animatedStyle = useAnimatedStyle(() => {
-          const translateX = interpolate(
-            animatedValue.value,
-            [0, 1],
-            [0, pos.x]
-          );
-          const translateY = interpolate(
-            animatedValue.value,
-            [0, 1],
-            [0, pos.y]
-          );
-
-          // La rotación inicial y de retorno
-          const rotate = interpolate(
-            animatedValue.value,
-            [0, 1],
-            [0, 360] // Gira 360 grados al aparecer, y vuelve al ocultarse
-          );
-
-          // La opacidad para aparecer/desaparecer
+          const translateX = interpolate(animatedValue.value, [0, 1], [0, pos.x]);
+          const translateY = interpolate(animatedValue.value, [0, 1], [0, pos.y]);
+          const rotate = interpolate(animatedValue.value, [0, 1], [0, 360]);
           const opacity = withTiming(visible ? 1 : 0, {
             duration: 300,
             easing: Easing.out(Easing.exp),
@@ -71,8 +67,8 @@ export default function ActionCircle({ visible, onPress }: Props) {
           return {
             opacity,
             transform: [
-              { translateX: translateX },
-              { translateY: translateY },
+              { translateX },
+              { translateY },
               { rotate: `${rotate}deg` },
             ],
           };
@@ -81,13 +77,26 @@ export default function ActionCircle({ visible, onPress }: Props) {
         return (
           <Animated.View
             key={index}
-            style={[styles.circleWrapper, animatedStyle]}
+            style={[
+              styles.circleWrapper,
+              animatedStyle,
+              {
+                marginLeft: -CIRCLE_SIZE / 2,
+                marginTop: -CIRCLE_SIZE / 2,
+              },
+            ]}
           >
             <TouchableOpacity
-              style={styles.circle}
+              style={[
+                styles.circle,
+                {
+                  backgroundColor: neonColors[index],
+                  shadowColor: neonColors[index],
+                },
+              ]}
               onPress={() => onPress(index)}
             >
-              <Text style={styles.emoji}>{emojis[index]}</Text>
+              {icons[index]}
             </TouchableOpacity>
           </Animated.View>
         );
@@ -99,24 +108,22 @@ export default function ActionCircle({ visible, onPress }: Props) {
 const styles = StyleSheet.create({
   circleWrapper: {
     position: "absolute",
-    zIndex: 10,
-    // Estos valores centran el 'wrapper' de cada círculo en el centro del 'imageWrapper'
-    // La animación de traslación se construye a partir de este punto.
-    left: '50%',
-    top: '50%',
-    marginLeft: -30, // La mitad del ancho del círculo (60/2) para centrarlo
-    marginTop: -30,  // La mitad de la altura del círculo (60/2) para centrarlo
+    zIndex: 1,
+    left: "50%",
+    top: "50%",
   },
   circle: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    backgroundColor: "#77B0AA",
+    width: CIRCLE_SIZE,
+    height: CIRCLE_SIZE,
+    borderRadius: BORDER_RADIUS,
     justifyContent: "center",
     alignItems: "center",
-    elevation: 4,
-  },
-  emoji: {
-    fontSize: 24,
+    shadowOffset: {
+      width: 0,
+      height: 0,
+    },
+    shadowOpacity: 0.8,
+    shadowRadius: 15,
+    elevation: Platform.OS === "android" ? 10 : 0,
   },
 });
