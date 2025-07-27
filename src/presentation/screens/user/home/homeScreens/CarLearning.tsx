@@ -98,19 +98,19 @@ export default function CarLearning() {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#f5f6fa",
+    backgroundColor: "#FEFAE0",
     padding: 20,
     flexGrow: 1,
   },
   title: {
     fontSize: 24,
     fontWeight: "bold",
-    color: "#2c3e50",
+    color: "#0A400C",
     marginBottom: 4,
   },
   subtitle: {
     fontSize: 15,
-    color: "#7f8c8d",
+    color: "#819067",
     marginBottom: 20,
   },
   image: {
@@ -121,7 +121,7 @@ const styles = StyleSheet.create({
   },
   infoBox: {
     flexDirection: "row",
-    backgroundColor: "#ecf0f1",
+    backgroundColor: "#B1AB86",
     padding: 12,
     borderRadius: 10,
     alignItems: "center",
@@ -133,22 +133,22 @@ const styles = StyleSheet.create({
   infoTitle: {
     fontWeight: "bold",
     fontSize: 14,
-    color: "#34495e",
+    color: "#0A400C",
   },
   infoDesc: {
     fontSize: 13,
-    color: "#7f8c8d",
+    color: "#819067",
   },
   sectionTitle: {
     fontSize: 18,
     fontWeight: "600",
     marginTop: 25,
     marginBottom: 10,
-    color: "#2c3e50",
+    color: "#0A400C",
   },
   lessonCard: {
     flexDirection: "row",
-    backgroundColor: "#fff",
+    backgroundColor: "#FEFAE0",
     padding: 12,
     borderRadius: 10,
     alignItems: "center",
@@ -158,11 +158,11 @@ const styles = StyleSheet.create({
   lessonTitle: {
     fontWeight: "bold",
     fontSize: 15,
-    color: "#2c3e50",
+    color: "#0A400C",
   },
   lessonDesc: {
     fontSize: 13,
-    color: "#7f8c8d",
+    color: "#819067",
   },
   progressBox: {
     marginBottom: 20,
@@ -170,27 +170,27 @@ const styles = StyleSheet.create({
   progressLabel: {
     fontSize: 14,
     marginBottom: 6,
-    color: "#34495e",
+    color: "#0A400C",
   },
   progressBar: {
     height: 10,
-    backgroundColor: "#dcdde1",
+    backgroundColor: "#B1AB86",
     borderRadius: 8,
   },
   progressFill: {
     height: "100%",
-    backgroundColor: "#3498db",
+    backgroundColor: "#0A400C",
     borderRadius: 8,
   },
   button: {
-    backgroundColor: "#2980b9",
+    backgroundColor: "#819067",
     paddingVertical: 12,
     borderRadius: 10,
     alignItems: "center",
     marginTop: 10,
   },
   buttonText: {
-    color: "#fff",
+    color: "#FEFAE0",
     fontSize: 15,
     fontWeight: "600",
   },
