@@ -1,119 +1,130 @@
+import React from "react";
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert } from "react-native";
-import { Ionicons } from '@expo/vector-icons'; // Asegúrate de tenerlo instalado
+import { Ionicons } from '@expo/vector-icons';
+import { useTheme } from '@/src/presentation/theme/ThemeContext'; // Importar el hook de tema
 
 export default function Home() {
+  const { theme } = useTheme(); // Usamos el tema actual
+
   const handleCallAssistance = () => {
     Alert.alert("Llamando a asistencia...", "Conectando con el centro de emergencias 🚨");
     // Aquí podrías integrar linking a teléfono o navegación
   };
 
-  return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.title}>🚨 Emergencias Vehiculares</Text>
+  // Definir los estilos dentro del componente para acceder al objeto 'theme'
+  const dynamicStyles = StyleSheet.create({
+    container: {
+      padding: 20,
+      backgroundColor: theme.background, // Usa el color de fondo del tema
+      flexGrow: 1, // Asegura que el ScrollView ocupe todo el espacio disponible
+    },
+    title: {
+      fontSize: 24,
+      fontWeight: "bold",
+      color: theme.text, // Usa el color de texto principal del tema
+      marginBottom: 20,
+      textAlign: "center",
+    },
+    sectionTitle: {
+      fontSize: 18,
+      fontWeight: "600",
+      marginBottom: 8,
+      color: theme.text, // Usa el color de texto principal del tema
+    },
+    text: {
+      fontSize: 14,
+      color: theme.icon, // Usa el color de icono para un tono medio
+      marginBottom: 20,
+      lineHeight: 20,
+    },
+    button: {
+      backgroundColor: theme.danger, // Usa el color de peligro del tema para el botón de emergencia
+      padding: 12,
+      borderRadius: 8,
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "center",
+      gap: 8,
+      marginBottom: 30,
+      shadowColor: "#000", // Sombras fijas para consistencia
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.25,
+      shadowRadius: 3.84,
+      elevation: 5,
+    },
+    buttonText: {
+      color: theme.buttonText, // Usa el color de texto del botón del tema
+      fontWeight: "600",
+      fontSize: 16,
+    },
+    card: {
+      backgroundColor: theme.card, // Usa el color de tarjeta del tema
+      borderRadius: 10,
+      padding: 15,
+      marginBottom: 15,
+      flexDirection: "row",
+      alignItems: "center",
+      shadowColor: "#000", // Sombras fijas para consistencia
+      shadowOpacity: 0.05,
+      shadowRadius: 4,
+      elevation: 2,
+    },
+    cardContent: {
+      marginLeft: 15,
+      flex: 1,
+    },
+    cardTitle: {
+      fontSize: 16,
+      fontWeight: "600",
+      color: theme.text, // Usa el color de texto principal del tema
+    },
+    cardSubtitle: {
+      fontSize: 13,
+      color: theme.icon, // Usa el color de icono para un tono medio
+      marginTop: 4,
+    },
+  });
 
-      <Text style={styles.sectionTitle}>¿Qué hacer en caso de emergencia?</Text>
-      <Text style={styles.text}>
+  return (
+    <ScrollView contentContainerStyle={dynamicStyles.container}>
+      <Text style={dynamicStyles.title}>🚨 Emergencias Vehiculares</Text>
+
+      <Text style={dynamicStyles.sectionTitle}>¿Qué hacer en caso de emergencia?</Text>
+      <Text style={dynamicStyles.text}>
         1. Mantén la calma.{"\n"}
         2. Detén el vehículo en un lugar seguro.{"\n"}
         3. Enciende las luces de emergencia.{"\n"}
         4. Llama a asistencia si es necesario.
       </Text>
 
-      <TouchableOpacity style={styles.button} onPress={handleCallAssistance}>
-        <Ionicons name="call" size={20} color="#fff" />
-        <Text style={styles.buttonText}>Llamar a asistencia</Text>
+      <TouchableOpacity style={dynamicStyles.button} onPress={handleCallAssistance}>
+        <Ionicons name="call" size={20} color={theme.buttonText} /> {/* Usa el color de texto del botón del tema */}
+        <Text style={dynamicStyles.buttonText}>Llamar a asistencia</Text>
       </TouchableOpacity>
 
-      <View style={styles.card}>
-        <Ionicons name="car-sport" size={30} color="#007AFF" />
-        <View style={styles.cardContent}>
-          <Text style={styles.cardTitle}>Estado del vehículo</Text>
-          <Text style={styles.cardSubtitle}>Revisa si hay códigos de error o alertas activas.</Text>
+      <View style={dynamicStyles.card}>
+        <Ionicons name="car-sport" size={30} color={theme.primary} /> {/* Usa el color primario del tema */}
+        <View style={dynamicStyles.cardContent}>
+          <Text style={dynamicStyles.cardTitle}>Estado del vehículo</Text>
+          <Text style={dynamicStyles.cardSubtitle}>Revisa si hay códigos de error o alertas activas.</Text>
         </View>
       </View>
 
-      <View style={styles.card}>
-        <Ionicons name="medkit" size={30} color="#FF3B30" />
-        <View style={styles.cardContent}>
-          <Text style={styles.cardTitle}>Botiquín de primeros auxilios</Text>
-          <Text style={styles.cardSubtitle}>Verifica que tu botiquín esté completo y accesible.</Text>
+      <View style={dynamicStyles.card}>
+        <Ionicons name="medkit" size={30} color={theme.primary} /> {/* Usa el color primario del tema */}
+        <View style={dynamicStyles.cardContent}>
+          <Text style={dynamicStyles.cardTitle}>Botiquín de primeros auxilios</Text>
+          <Text style={dynamicStyles.cardSubtitle}>Verifica que tu botiquín esté completo y accesible.</Text>
         </View>
       </View>
 
-      <View style={styles.card}>
-        <Ionicons name="flash" size={30} color="#FFA500" />
-        <View style={styles.cardContent}>
-          <Text style={styles.cardTitle}>Revisión de batería</Text>
-          <Text style={styles.cardSubtitle}>Si tu carro no enciende, podría ser la batería.</Text>
+      <View style={dynamicStyles.card}>
+        <Ionicons name="flash" size={30} color={theme.primary} /> {/* Usa el color primario del tema */}
+        <View style={dynamicStyles.cardContent}>
+          <Text style={dynamicStyles.cardTitle}>Revisión de batería</Text>
+          <Text style={dynamicStyles.cardSubtitle}>Si tu carro no enciende, podría ser la batería.</Text>
         </View>
       </View>
     </ScrollView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    padding: 20,
-    backgroundColor: "#F8F9FB",
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    color: "#2C3E50",
-    marginBottom: 20,
-    textAlign: "center",
-  },
-  sectionTitle: {
-    fontSize: 18,
-    fontWeight: "600",
-    marginBottom: 8,
-    color: "#34495E",
-  },
-  text: {
-    fontSize: 14,
-    color: "#555",
-    marginBottom: 20,
-    lineHeight: 20,
-  },
-  button: {
-    backgroundColor: "#007AFF",
-    padding: 12,
-    borderRadius: 8,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: 8,
-    marginBottom: 30,
-  },
-  buttonText: {
-    color: "#fff",
-    fontWeight: "600",
-    fontSize: 16,
-  },
-  card: {
-    backgroundColor: "#fff",
-    borderRadius: 10,
-    padding: 15,
-    marginBottom: 15,
-    flexDirection: "row",
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOpacity: 0.05,
-    shadowRadius: 4,
-    elevation: 2,
-  },
-  cardContent: {
-    marginLeft: 15,
-    flex: 1,
-  },
-  cardTitle: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: "#2C3E50",
-  },
-  cardSubtitle: {
-    fontSize: 13,
-    color: "#666",
-    marginTop: 4,
-  },
-});

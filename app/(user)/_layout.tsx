@@ -1,6 +1,7 @@
 import { Tabs, useRouter } from "expo-router"; // Importa Link y useRouter de expo-router para la navegación.
 import { AntDesign, FontAwesome5, Ionicons } from "@expo/vector-icons"; // Importa Ionicons para el icono de campana.
 import { Pressable } from "react-native"; // Importa Pressable y View para hacer el icono interactivo.
+import { useTheme } from '@/src/presentation/theme/ThemeContext'; // Importar el hook de tema
 
 /**
  * @function TabBarIcon
@@ -25,18 +26,18 @@ function TabBarIcon(props: {
  * @description Componente para el icono de campana de notificaciones en el encabezado.
  * Al presionarlo, navega a la pantalla de notificaciones.
  * @param {object} props - Las propiedades del componente.
- * @param {string} props.colorScheme - El esquema de color actual (light/dark).
+ * @param {object} props.theme - El objeto de tema actual.
  * @param {object} props.router - El objeto router de Expo Router para la navegación.
  * @returns {JSX.Element} Un componente Pressable con el icono de notificación.
  */
-function NotificationBell({ colorScheme, router }) {
+function NotificationBell({ theme, router }) {
   return (
     <Pressable onPress={() => router.push("/notifications")}>
       {({ pressed }) => (
         <Ionicons
           name="notifications-outline" // Icono de campana de Ionicons
           size={25}
-          color={Colors[colorScheme ?? "light"].text} // Color del icono basado en el tema
+          color={theme.icon} // Color del icono basado en el tema
           style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }} // Estilo para el icono, con opacidad al presionar
         />
       )}
@@ -52,29 +53,26 @@ function NotificationBell({ colorScheme, router }) {
  * @returns {JSX.Element} Un componente de navegación por pestañas.
  */
 export default function UserLayout() {
-  // Se ha eliminado la importación de useColorScheme.
-  // Se establece un esquema de color por defecto a 'light'.
-  // Si necesitas soporte para dark mode, deberás implementar tu propio useColorScheme o usar una biblioteca.
-  const colorScheme = "light";
   // Inicializa el hook useRouter para la navegación programática.
   const router = useRouter();
+  const { theme } = useTheme(); // Usamos el tema actual
 
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
-        tabBarInactiveTintColor: Colors[colorScheme ?? "light"].tabIconDefault,
+        tabBarActiveTintColor: theme.primary, // Color activo de la pestaña con el tema
+        tabBarInactiveTintColor: theme.icon, // Color inactivo de la pestaña con el tema
         tabBarStyle: {
-          backgroundColor: Colors[colorScheme ?? "light"].background,
-          borderTopColor: Colors[colorScheme ?? "light"].tabIconDefault,
+          backgroundColor: theme.background, // Fondo de la barra de pestañas con el tema
+          borderTopColor: theme.border, // Color del borde superior de la barra de pestañas con el tema
         },
         headerStyle: {
-          backgroundColor: Colors[colorScheme ?? "light"].background,
+          backgroundColor: theme.background, // Fondo del encabezado con el tema
         },
         headerTitleStyle: {
-          color: Colors[colorScheme ?? "light"].text,
+          color: theme.text, // Color del título del encabezado con el tema
         },
-        headerTintColor: Colors[colorScheme ?? "light"].text,
+        headerTintColor: theme.text, // Color de los botones de navegación del encabezado con el tema
       }}
     >
       {/* Pestaña "Vehículo" - Visible en la barra de pestañas con icono de notificaciones */}
@@ -88,7 +86,7 @@ export default function UserLayout() {
           // Define el componente a renderizar en el lado derecho del encabezado.
           // Ahora usa el componente NotificationBell refactorizado.
           headerRight: () => (
-            <NotificationBell colorScheme={colorScheme} router={router} />
+            <NotificationBell theme={theme} router={router} />
           ),
         }}
       />
@@ -105,7 +103,7 @@ export default function UserLayout() {
           // Define el componente a renderizar en el lado derecho del encabezado.
           // Ahora usa el componente NotificationBell refactorizado.
           headerRight: () => (
-            <NotificationBell colorScheme={colorScheme} router={router} />
+            <NotificationBell theme={theme} router={router} />
           ),
         }}
       />
@@ -138,7 +136,7 @@ export default function UserLayout() {
           // Define el componente a renderizar en el lado derecho del encabezado.
           // Ahora usa el componente NotificationBell refactorizado.
           headerRight: () => (
-            <NotificationBell colorScheme={colorScheme} router={router} />
+            <NotificationBell theme={theme} router={router} />
           ),
         }}
       />
