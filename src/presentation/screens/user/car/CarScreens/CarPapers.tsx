@@ -13,6 +13,7 @@ import {
 } from "react-native";
 import { MotiView } from "moti";
 import { useFocusEffect, useRouter } from "expo-router";
+import { useTheme } from '@/src/presentation/theme/ThemeContext'; // Importar el hook de tema
 
 if (Platform.OS === "android") {
     UIManager.setLayoutAnimationEnabledExperimental?.(true);
@@ -25,6 +26,8 @@ type Document = {
 };
 
 export default function CarPapers() {
+    const { theme } = useTheme(); // Usamos el tema actual
+
     const carDocuments: Document[] = [
         { name: "SOAT", date: "22/08/2025", isPending: true },
         { name: "Revisión técnico-mecánica", date: "05/09/2025", isPending: true },
@@ -115,51 +118,153 @@ export default function CarPapers() {
         });
     };
 
+    // Define styles within the component to access the 'theme' object
+    const dynamicStyles = StyleSheet.create({
+        container: {
+            padding: 20,
+            backgroundColor: theme.background, // Use theme background color
+            flexGrow: 1,
+        },
+        title: {
+            fontSize: 24,
+            fontWeight: "bold",
+            color: theme.text, // Use theme text color
+            marginBottom: 20,
+        },
+        sectionTitle: {
+            fontSize: 18,
+            fontWeight: "600",
+            marginBottom: 10,
+            color: theme.primary, // Use theme primary color
+        },
+        accordionBox: {
+            backgroundColor: theme.card, // Use theme card color
+            borderRadius: 10,
+            marginBottom: 12,
+            overflow: "hidden",
+            elevation: 2,
+            shadowColor: "#000", // Consistent shadows
+            shadowOpacity: 0.1,
+            shadowRadius: 4,
+        },
+        accordionHeader: {
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+            backgroundColor: theme.secondary, // Use theme secondary color
+            padding: 12,
+        },
+        accordionTitle: {
+            fontSize: 16,
+            color: theme.text, // Use theme text color
+            fontWeight: "600",
+        },
+        chevron: {
+            fontSize: 18,
+            color: theme.text, // Use theme text color
+        },
+        accordionContent: {
+            padding: 12,
+            backgroundColor: theme.background, // Use theme background color for content
+        },
+        input: {
+            backgroundColor: theme.card, // Use theme card color
+            borderColor: theme.border, // Use theme border color
+            borderWidth: 1,
+            borderRadius: 8,
+            paddingHorizontal: 12,
+            paddingVertical: 8,
+            marginBottom: 10,
+            fontSize: 14,
+            color: theme.text, // Use theme text color
+        },
+        payButton: {
+            backgroundColor: theme.primary, // Use theme primary color
+            paddingVertical: 10,
+            borderRadius: 8,
+            alignItems: "center",
+        },
+        payButtonText: {
+            color: theme.buttonText, // Use theme button text color
+            fontWeight: "600",
+            fontSize: 15,
+        },
+        card: {
+            backgroundColor: theme.card, // Use theme card color
+            padding: 16,
+            borderRadius: 10,
+            marginTop: 20,
+            shadowColor: "#000",
+            shadowOpacity: 0.05,
+            shadowRadius: 10,
+            elevation: 2,
+        },
+        documentItem: {
+            fontSize: 16,
+            marginBottom: 6,
+            color: theme.text, // Use theme text color
+        },
+        note: {
+            marginTop: 24,
+            padding: 16,
+            backgroundColor: theme.secondary, // Use theme secondary color for the note
+            borderRadius: 10,
+        },
+        noteText: {
+            fontSize: 14,
+            color: theme.text, // Use theme text color
+            lineHeight: 20,
+        },
+    });
+
     return (
         <ScrollView
             ref={scrollRef}
             style={{ flex: 1 }}
-            contentContainerStyle={[styles.container, { minHeight: "100%" }]}
+            contentContainerStyle={[dynamicStyles.container, { minHeight: "100%" }]}
         >
-            <Text style={styles.title}>¿Tienes pagos pendientes?</Text>
+            <Text style={dynamicStyles.title}>¿Tienes pagos pendientes?</Text>
 
             <MotiView from={{ opacity: 0, translateY: 20 }} animate={{ opacity: 1, translateY: 0 }} transition={{ duration: 500 }}>
-                <Text style={styles.sectionTitle}>Papeles pendientes</Text>
+                <Text style={dynamicStyles.sectionTitle}>Papeles pendientes</Text>
 
                 {pendingDocs.map((doc) => {
                     const realIndex = carDocuments.findIndex(d => d.name === doc.name);
 
                     return (
-                        <View key={realIndex} style={styles.accordionBox}>
-                            <TouchableOpacity onPress={() => toggleExpand(realIndex)} style={styles.accordionHeader}>
-                                <Text style={styles.accordionTitle}>
+                        <View key={realIndex} style={dynamicStyles.accordionBox}>
+                            <TouchableOpacity onPress={() => toggleExpand(realIndex)} style={dynamicStyles.accordionHeader}>
+                                <Text style={dynamicStyles.accordionTitle}>
                                     {doc.name} - Vence el {doc.date}
                                 </Text>
-                                <Text style={styles.chevron}>{expandedIndex === realIndex ? "▲" : "▼"}</Text>
+                                <Text style={dynamicStyles.chevron}>{expandedIndex === realIndex ? "▲" : "▼"}</Text>
                             </TouchableOpacity>
 
                             {expandedIndex === realIndex && (
-                                <View style={styles.accordionContent}>
+                                <View style={dynamicStyles.accordionContent}>
                                     <TextInput
                                         placeholder="Número de placa (Ej: ABC123)"
-                                        style={styles.input}
+                                        style={dynamicStyles.input}
+                                        placeholderTextColor={theme.icon} // Use theme icon color for placeholder
                                         value={formData[realIndex]?.placa || ""}
                                         onChangeText={text => handleInputChange(realIndex, "placa", text)}
                                     />
                                     <TextInput
                                         placeholder="Documento del propietario"
-                                        style={styles.input}
+                                        style={dynamicStyles.input}
+                                        placeholderTextColor={theme.icon} // Use theme icon color for placeholder
                                         value={formData[realIndex]?.documento || ""}
                                         onChangeText={text => handleInputChange(realIndex, "documento", text)}
                                     />
                                     <TextInput
                                         placeholder="Número de póliza (opcional)"
-                                        style={styles.input}
+                                        style={dynamicStyles.input}
+                                        placeholderTextColor={theme.icon} // Use theme icon color for placeholder
                                         value={formData[realIndex]?.poliza || ""}
                                         onChangeText={text => handleInputChange(realIndex, "poliza", text)}
                                     />
-                                    <TouchableOpacity style={styles.payButton} onPress={() => handlePagar(realIndex)}>
-                                        <Text style={styles.payButtonText}>Pagar</Text>
+                                    <TouchableOpacity style={dynamicStyles.payButton} onPress={() => handlePagar(realIndex)}>
+                                        <Text style={dynamicStyles.payButtonText}>Pagar</Text>
                                     </TouchableOpacity>
                                 </View>
                             )}
@@ -168,120 +273,27 @@ export default function CarPapers() {
                 })}
             </MotiView>
 
-            <MotiView from={{ opacity: 0, translateY: 20 }} animate={{ opacity: 1, translateY: 0 }} transition={{ delay: 200, duration: 500 }} style={styles.card}>
-                <Text style={styles.sectionTitle}>Papeles al día</Text>
+            <MotiView from={{ opacity: 0, translateY: 20 }} animate={{ opacity: 1, translateY: 0 }} transition={{ delay: 200, duration: 500 }} style={dynamicStyles.card}>
+                <Text style={dynamicStyles.sectionTitle}>Papeles al día</Text>
                 {upToDateDocs.map((doc, index) => (
-                    <Text key={index} style={[styles.documentItem, { color: "#135D66" }]}>
+                    <Text key={index} style={dynamicStyles.documentItem}>
                         {doc.name} - Vigente hasta {doc.date}
                     </Text>
                 ))}
             </MotiView>
 
-            <MotiView from={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 500, duration: 400 }} style={styles.note}>
-                <Text style={styles.noteText}>
+            <MotiView from={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 500, duration: 400 }} style={dynamicStyles.note}>
+                <Text style={dynamicStyles.noteText}>
                     Se generará una factura con los papeles pendientes, el total a pagar y una ubicación cercana para hacerlo.
                     Además, se te notificará cuándo puedes realizar la técnico mecánica.
                 </Text>
             </MotiView>
 
             {pagosSeleccionados.length > 0 && (
-                <TouchableOpacity style={[styles.payButton, { marginTop: 20 }]} onPress={handleCrearFactura}>
-                    <Text style={styles.payButtonText}>Crear Factura</Text>
+                <TouchableOpacity style={[dynamicStyles.payButton, { marginTop: 20 }]} onPress={handleCrearFactura}>
+                    <Text style={dynamicStyles.payButtonText}>Crear Factura</Text>
                 </TouchableOpacity>
             )}
         </ScrollView>
     );
 }
-
-const styles = StyleSheet.create({
-    container: {
-        padding: 20,
-        backgroundColor: "#E3FEF7",
-        flexGrow: 1,
-    },
-    title: {
-        fontSize: 24,
-        fontWeight: "bold",
-        color: "#003C43",
-        marginBottom: 20,
-    },
-    sectionTitle: {
-        fontSize: 18,
-        fontWeight: "600",
-        marginBottom: 10,
-        color: "#135D66",
-    },
-    accordionBox: {
-        backgroundColor: "#FFFFFF",
-        borderRadius: 10,
-        marginBottom: 12,
-        overflow: "hidden",
-        elevation: 2,
-    },
-    accordionHeader: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
-        backgroundColor: "#77B0AA",
-        padding: 12,
-    },
-    accordionTitle: {
-        fontSize: 16,
-        color: "#003C43",
-        fontWeight: "600",
-    },
-    chevron: {
-        fontSize: 18,
-        color: "#003C43",
-    },
-    accordionContent: {
-        padding: 12,
-        backgroundColor: "#F0FFFF",
-    },
-    input: {
-        backgroundColor: "#FFFFFF",
-        borderColor: "#77B0AA",
-        borderWidth: 1,
-        borderRadius: 8,
-        paddingHorizontal: 12,
-        paddingVertical: 8,
-        marginBottom: 10,
-        fontSize: 14,
-    },
-    payButton: {
-        backgroundColor: "#135D66",
-        paddingVertical: 10,
-        borderRadius: 8,
-        alignItems: "center",
-    },
-    payButtonText: {
-        color: "#E3FEF7",
-        fontWeight: "600",
-        fontSize: 15,
-    },
-    card: {
-        backgroundColor: "#FFFFFF",
-        padding: 16,
-        borderRadius: 10,
-        marginTop: 20,
-        shadowColor: "#000",
-        shadowOpacity: 0.05,
-        shadowRadius: 10,
-        elevation: 2,
-    },
-    documentItem: {
-        fontSize: 16,
-        marginBottom: 6,
-    },
-    note: {
-        marginTop: 24,
-        padding: 16,
-        backgroundColor: "#C7F7EE",
-        borderRadius: 10,
-    },
-    noteText: {
-        fontSize: 14,
-        color: "#003C43",
-        lineHeight: 20,
-    },
-});

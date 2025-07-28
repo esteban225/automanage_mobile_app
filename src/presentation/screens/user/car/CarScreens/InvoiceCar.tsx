@@ -7,14 +7,17 @@ import {
   TouchableOpacity,
 } from "react-native";
 import React, { useEffect, useState } from "react";
+import { useTheme } from '@/src/presentation/theme/ThemeContext'; // Importar el hook de tema
 
 export default function Appointments() {
   const { pagos } = useLocalSearchParams();
+  const { theme } = useTheme(); // Usamos el tema actual
 
   // ✅ Asegura que el JSON venga bien y sea un array
   const parsedPagos = (() => {
     try {
-      const parsed = JSON.parse(pagos as string);
+      const pagosStr = Array.isArray(pagos) ? pagos[0] : pagos;
+      const parsed = JSON.parse(pagosStr); // Ensure pagos is a string before parsing
       return Array.isArray(parsed) ? parsed : [];
     } catch (error) {
       console.error("Error parsing pagos:", error);
@@ -23,7 +26,7 @@ export default function Appointments() {
   })();
 
   const [pagosList, setPagosList] = useState(parsedPagos);
-  const [tiempoMinutos, setTiempoMinutos] = useState<number>(0);
+  const [tiempoMinutos, setTiempoMinutos] = useState(0);
   const [pagoPendienteIndex, setPagoPendienteIndex] = useState<number | null>(null);
 
   const tiempos = [5, 15, 20, 40];
@@ -87,215 +90,215 @@ export default function Appointments() {
     ['block', 'block', 'block', 'block', 'block'],
   ];
 
-  return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.title}>Tu factura</Text>
+  // Define styles within the component to access the 'theme' object
+  const dynamicStyles = StyleSheet.create({
+    container: {
+      backgroundColor: theme.background, // Use theme background color
+      padding: 20,
+      flexGrow: 1,
+    },
+    title: {
+      fontSize: 26,
+      fontWeight: "bold",
+      marginBottom: 20,
+      color: theme.text, // Use theme text color
+      alignSelf: "center",
+    },
+    card: {
+      backgroundColor: theme.card, // Use theme card color
+      borderRadius: 12,
+      padding: 16,
+      marginBottom: 16,
+      shadowColor: "#000",
+      shadowOpacity: 0.1,
+      shadowRadius: 4,
+      elevation: 3,
+    },
+    row: {
+      flexDirection: "row",
+      justifyContent: "space-between",
+    },
+    name: {
+      fontSize: 18,
+      fontWeight: "600",
+      color: theme.primary, // Use theme primary color
+      marginBottom: 8,
+    },
+    detail: {
+      fontSize: 14,
+      marginBottom: 4,
+      color: theme.text, // Use theme text color
+    },
+    costo: {
+      fontSize: 16,
+      fontWeight: "bold",
+      color: theme.text, // Use theme text color
+      marginTop: 12,
+    },
+    pagarLuego: {
+      fontSize: 18,
+      color: theme.icon, // Use theme icon color for a softer grey
+    },
+    botonConfirmar: {
+      marginTop: 12,
+      backgroundColor: theme.primary, // Use theme primary color
+      paddingVertical: 8,
+      paddingHorizontal: 12,
+      borderRadius: 8,
+      alignSelf: "flex-start",
+    },
+    botonConfirmarTexto: {
+      color: theme.buttonText, // Use theme button text color
+      fontWeight: "bold",
+      fontSize: 14,
+    },
+    mapaBox: {
+      backgroundColor: theme.card, // Use theme card color for the map box
+      padding: 16,
+      borderRadius: 12,
+      marginTop: 30,
+      alignItems: "center",
+      shadowColor: "#000", // Consistent shadows
+      shadowOpacity: 0.1,
+      shadowRadius: 4,
+      elevation: 3,
+    },
+    mapaTitulo: {
+      fontSize: 16,
+      fontWeight: "600",
+      color: theme.text, // Use theme text color
+      marginBottom: 12,
+    },
+    mapa: {
+      backgroundColor: theme.background, // Use theme background for the inner map area
+      padding: 10,
+      borderRadius: 8,
+      width: "100%",
+    },
+    mapaGridRow: {
+      flexDirection: 'row',
+      justifyContent: 'center',
+    },
+    cuadro: {
+      width: 40,
+      height: 25,
+      backgroundColor: theme.secondary, // Use theme secondary color for blocks
+      borderRadius: 4,
+      marginHorizontal: 2.5,
+      marginVertical: 2.5,
+    },
+    mapaCellEmpty: {
+      width: 40,
+      height: 25,
+      marginHorizontal: 2.5,
+      marginVertical: 2.5,
+    },
+    persona: {
+      fontSize: 18,
+      width: 40,
+      height: 25,
+      textAlign: 'center',
+      lineHeight: 25,
+      backgroundColor: theme.secondary, // Use theme secondary color for path elements
+      borderRadius: 4,
+      marginHorizontal: 2.5,
+      marginVertical: 2.5,
+    },
+    puntoPago: {
+      fontSize: 20,
+      width: 40,
+      height: 25,
+      textAlign: 'center',
+      lineHeight: 25,
+      backgroundColor: theme.secondary, // Use theme secondary color for path elements
+      borderRadius: 4,
+      marginHorizontal: 2.5,
+      marginVertical: 2.5,
+    },
+    lineaHorizontal: {
+      width: 40,
+      height: 5,
+      backgroundColor: theme.text, // Use theme text color for lines for contrast
+      alignSelf: 'center',
+      marginHorizontal: 2.5,
+      marginVertical: 10,
+    },
+    lineaVertical: {
+      width: 5,
+      height: 25,
+      backgroundColor: theme.text, // Use theme text color for lines for contrast
+      alignSelf: 'center',
+      marginHorizontal: 17.5,
+      marginVertical: 2.5,
+    },
+    tiempoTexto: {
+      marginTop: 10,
+      fontSize: 14,
+      color: theme.text, // Use theme text color
+    },
+  });
 
-      {pagosList.map((item: any, index: number) => (
-        <View key={index} style={styles.card}>
-          <View style={styles.row}>
+  return (
+    <ScrollView contentContainerStyle={dynamicStyles.container}>
+      <Text style={dynamicStyles.title}>Tu factura</Text>
+
+      {pagosList.map((item, index) => (
+        <View key={index} style={dynamicStyles.card}>
+          <View style={dynamicStyles.row}>
             <View style={{ flex: 1 }}>
-              <Text style={styles.name}>{item.name}</Text>
-              <Text style={styles.detail}>Placa: {item.placa}</Text>
-              <Text style={styles.detail}>Propietario: {item.documento}</Text>
+              <Text style={dynamicStyles.name}>{item.name}</Text>
+              <Text style={dynamicStyles.detail}>Placa: {item.placa}</Text>
+              <Text style={dynamicStyles.detail}>Propietario: {item.documento}</Text>
               {item.poliza && (
-                <Text style={styles.detail}>Póliza: {item.poliza}</Text>
+                <Text style={dynamicStyles.detail}>Póliza: {item.poliza}</Text>
               )}
-              <Text style={styles.detail}>Vence: {item.date}</Text>
+              <Text style={dynamicStyles.detail}>Vence: {item.date}</Text>
             </View>
             <View style={{ alignItems: "flex-end", justifyContent: "space-between" }}>
               <TouchableOpacity onPress={() => mostrarBotonPagarLuego(index)}>
-                <Text style={styles.pagarLuego}>‼️</Text>
+                <Text style={dynamicStyles.pagarLuego}>‼️</Text>
               </TouchableOpacity>
-              <Text style={styles.costo}>Costo: ${getCosto(item.name)}</Text>
+              <Text style={dynamicStyles.costo}>Costo: ${getCosto(item.name)}</Text>
             </View>
           </View>
 
           {pagoPendienteIndex === index && (
             <TouchableOpacity
               onPress={() => confirmarPagarLuego(index)}
-              style={styles.botonConfirmar}
+              style={dynamicStyles.botonConfirmar}
             >
-              <Text style={styles.botonConfirmarTexto}>Pagar luego</Text>
+              <Text style={dynamicStyles.botonConfirmarTexto}>Pagar luego</Text>
             </TouchableOpacity>
           )}
         </View>
       ))}
 
       {pagosList.length > 0 && (
-        <View style={styles.mapaBox}>
-          <Text style={styles.mapaTitulo}>Puedes pagar tu factura aquí:</Text>
-          <View style={styles.mapa}> {/* This is the main container for the map graphic */}
+        <View style={dynamicStyles.mapaBox}>
+          <Text style={dynamicStyles.mapaTitulo}>Puedes pagar tu factura aquí:</Text>
+          <View style={dynamicStyles.mapa}>
             {mapLayout.map((row, rowIndex) => (
-              <View key={rowIndex} style={styles.mapaGridRow}>
+              <View key={rowIndex} style={dynamicStyles.mapaGridRow}>
                 {row.map((cell, cellIndex) => {
                   if (cell === 'block') {
-                    return <View key={cellIndex} style={styles.cuadro} />;
+                    return <View key={cellIndex} style={dynamicStyles.cuadro} />;
                   } else if (cell === 'person') {
-                    return <Text key={cellIndex} style={styles.persona}>🚶</Text>;
+                    return <Text key={cellIndex} style={dynamicStyles.persona}>🚶</Text>;
                   } else if (cell === 'point') {
-                    return <Text key={cellIndex} style={styles.puntoPago}>📍</Text>;
+                    return <Text key={cellIndex} style={dynamicStyles.puntoPago}>📍</Text>;
                   } else if (cell === 'path_h') {
-                    return <View key={cellIndex} style={styles.lineaHorizontal} />;
+                    return <View key={cellIndex} style={dynamicStyles.lineaHorizontal} />;
                   } else if (cell === 'path_v') {
-                    return <View key={cellIndex} style={styles.lineaVertical} />;
+                    return <View key={cellIndex} style={dynamicStyles.lineaVertical} />;
                   }
-                  return <View key={cellIndex} style={styles.mapaCellEmpty} />; // Render an empty cell
+                  return <View key={cellIndex} style={dynamicStyles.mapaCellEmpty} />;
                 })}
               </View>
             ))}
           </View>
-          <Text style={styles.tiempoTexto}>El punto está a {tiempoMinutos} minutos</Text>
+          <Text style={dynamicStyles.tiempoTexto}>El punto está a {tiempoMinutos} minutos</Text>
         </View>
       )}
     </ScrollView>
   );
 }
-
-// Estilos
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: "#E3FEF7",
-    padding: 20,
-    flexGrow: 1,
-  },
-  title: {
-    fontSize: 26,
-    fontWeight: "bold",
-    marginBottom: 20,
-    color: "#003C43",
-    alignSelf: "center",
-  },
-  card: {
-    backgroundColor: "#FFFFFF",
-    borderRadius: 12,
-    padding: 16,
-    marginBottom: 16,
-    shadowColor: "#000",
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-  },
-  row: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-  },
-  name: {
-    fontSize: 18,
-    fontWeight: "600",
-    color: "#135D66",
-    marginBottom: 8,
-  },
-  detail: {
-    fontSize: 14,
-    marginBottom: 4,
-    color: "#003C43",
-  },
-  costo: {
-    fontSize: 16,
-    fontWeight: "bold",
-    color: "#003C43",
-    marginTop: 12,
-  },
-  pagarLuego: {
-    fontSize: 18,
-    color: "#888",
-  },
-  botonConfirmar: {
-    marginTop: 12,
-    backgroundColor: "#135D66",
-    paddingVertical: 8,
-    paddingHorizontal: 12,
-    borderRadius: 8,
-    alignSelf: "flex-start",
-  },
-  botonConfirmarTexto: {
-    color: "#fff",
-    fontWeight: "bold",
-    fontSize: 14,
-  },
-  mapaBox: {
-    backgroundColor: "#C7F7EE",
-    padding: 16,
-    borderRadius: 12,
-    marginTop: 30,
-    alignItems: "center",
-  },
-  mapaTitulo: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: "#003C43",
-    marginBottom: 12,
-  },
-  mapa: {
-    backgroundColor: "#E3FEF7",
-    padding: 10,
-    borderRadius: 8,
-    width: "100%",
-    // The grid itself will handle internal alignment, so remove alignItems here
-    // alignItems: "center",
-  },
-  mapaGridRow: {
-    flexDirection: 'row',
-    justifyContent: 'center', // Center cells within the row
-    // Removed gap and marginBottom here to allow lines to be drawn between blocks
-  },
-  cuadro: {
-    width: 40,
-    height: 25,
-    backgroundColor: "#77B0AA",
-    borderRadius: 4,
-    marginHorizontal: 2.5, // Half of the desired line width
-    marginVertical: 2.5,   // Half of the desired line width
-  },
-  mapaCellEmpty: {
-    width: 40,
-    height: 25,
-    // backgroundColor: 'transparent', // Default transparent
-    marginHorizontal: 2.5,
-    marginVertical: 2.5,
-  },
-  persona: {
-    fontSize: 18,
-    width: 40,
-    height: 25,
-    textAlign: 'center',
-    lineHeight: 25, // Vertically center text
-    backgroundColor: "#77B0AA", // Make it look like part of the path/block
-    borderRadius: 4,
-    marginHorizontal: 2.5,
-    marginVertical: 2.5,
-  },
-  puntoPago: {
-    fontSize: 20,
-    width: 40,
-    height: 25,
-    textAlign: 'center',
-    lineHeight: 25, // Vertically center text
-    backgroundColor: "#77B0AA", // Make it look like part of the path/block
-    borderRadius: 4,
-    marginHorizontal: 2.5,
-    marginVertical: 2.5,
-  },
-  lineaHorizontal: {
-    width: 40, // Match cuadro width
-    height: 5, // Thin black line
-    backgroundColor: 'black', // Black line
-    alignSelf: 'center', // Center the line vertically within its row space
-    marginHorizontal: 2.5, // Half of the desired line width
-    marginVertical: 10, // Adjust to center the line between blocks
-  },
-  lineaVertical: {
-    width: 5, // Thin black line
-    height: 25, // Match cuadro height
-    backgroundColor: 'black', // Black line
-    alignSelf: 'center', // Center the line horizontally within its column space
-    marginHorizontal: 17.5, // Adjust to center the line between blocks
-    marginVertical: 2.5, // Half of the desired line width
-  },
-  tiempoTexto: {
-    marginTop: 10,
-    fontSize: 14,
-    color: "#135D66",
-  },
-});

@@ -9,12 +9,14 @@ import {
 } from "react-native";
 import { useRouter } from "expo-router";
 import { useState } from "react";
-import ImageCar from "./components/ImageCar";
-import ActionCircle from "./components/ActionCircle";
+import ImageCar from "./components/ImageCar"; // Asumo que este componente no necesita cambios de tema internos directamente aquí
+import ActionCircle from "./components/ActionCircle"; // Asumo que este componente no necesita cambios de tema internos directamente aquí
+import { useTheme } from '@/src/presentation/theme/ThemeContext'; // Importar el hook de tema
 
 export default function UserCarHome() {
   const router = useRouter();
   const [showCircles, setShowCircles] = useState(false);
+  const { theme } = useTheme(); // Usamos el tema actual
 
   const carInfo = {
     make: "Nissan",
@@ -67,33 +69,98 @@ export default function UserCarHome() {
     });
   };
 
+  // Definir los estilos dentro del componente para acceder al objeto 'theme'
+  const dynamicStyles = StyleSheet.create({
+    safeArea: {
+      flex: 1,
+      backgroundColor: theme.background, // Usa el color de fondo del tema
+    },
+    container: {
+      paddingHorizontal: 24,
+      paddingTop: Platform.OS === "android" ? 30 : 10,
+      paddingBottom: 40,
+    },
+    card: {
+      backgroundColor: theme.card, // Usa el color de tarjeta del tema
+      borderRadius: 20,
+      padding: 20,
+      alignItems: "center",
+      marginBottom: 30,
+      shadowColor: "#000",
+      shadowOffset: { width: 0, height: 4 },
+      shadowOpacity: 0.1,
+      shadowRadius: 8,
+      elevation: 4,
+    },
+    carTitle: {
+      fontSize: 28,
+      fontWeight: "bold",
+      color: theme.text, // Usa el color de texto principal del tema
+      marginBottom: 6,
+    },
+    carSubtitle: {
+      fontSize: 16,
+      color: theme.icon, // Usa el color de icono para un gris más suave
+      fontWeight: "500",
+    },
+    imageWrapper: {
+      marginTop: 44,
+      marginBottom: 40,
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    buttonsContainer: {
+      marginTop: 44,
+      gap: 16,
+    },
+    button: {
+      backgroundColor: theme.primary, // Usa el color primario del tema
+      paddingVertical: 16,
+      borderRadius: 14,
+      alignItems: "center",
+      justifyContent: "center",
+      shadowColor: "#000",
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.15,
+      shadowRadius: 4,
+      elevation: 3,
+    },
+    buttonText: {
+      color: theme.buttonText, // Usa el color de texto del botón del tema
+      fontSize: 16,
+      fontWeight: "600",
+      letterSpacing: 0.3,
+    },
+  });
+
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <SafeAreaView style={dynamicStyles.safeArea}>
       <ScrollView
-        contentContainerStyle={styles.container}
+        contentContainerStyle={dynamicStyles.container}
         showsVerticalScrollIndicator={false}
       >
         {/* Tarjeta de información del vehículo */}
-        <View style={styles.card}>
+        <View style={dynamicStyles.card}>
           <Text
-            style={styles.carTitle}
+            style={dynamicStyles.carTitle}
           >{`${carInfo.make} ${carInfo.model}`}</Text>
           <Text
-            style={styles.carSubtitle}
+            style={dynamicStyles.carSubtitle}
           >{`${carInfo.year} • ${carInfo.licensePlate}`}</Text>
         </View>
 
         <TouchableOpacity
           onPress={toggleCircles}
           activeOpacity={0.9}
-          style={styles.imageWrapper}
+          style={dynamicStyles.imageWrapper}
         >
+          {/* Estos componentes (ImageCar, ActionCircle) necesitarían su propia lógica de tema si usan colores fijos */}
           <ImageCar />
           <ActionCircle visible={showCircles} onPress={handleCirclePress} />
         </TouchableOpacity>
 
         {/* Botones de acción */}
-        <View style={styles.buttonsContainer}>
+        <View style={dynamicStyles.buttonsContainer}>
           {[
             { text: "Pagar Papeles del Carro", route: "Papers" },
             { text: "Mantenimiento del Vehículo", route: "Maintenancie" },
@@ -101,12 +168,12 @@ export default function UserCarHome() {
           ].map((btn, i) => (
             <TouchableOpacity
               key={i}
-              style={styles.button}
+              style={dynamicStyles.button}
               onPress={() =>
                 router.push(`../(user)/car/(screens)/CarScreens/${btn.route}`)
               }
             >
-              <Text style={styles.buttonText}>{btn.text}</Text>
+              <Text style={dynamicStyles.buttonText}>{btn.text}</Text>
             </TouchableOpacity>
           ))}
         </View>
@@ -114,65 +181,3 @@ export default function UserCarHome() {
     </SafeAreaView>
   );
 }
-const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-    backgroundColor: "#F0F4F8", // fondo neutro
-  },
-  container: {
-    paddingHorizontal: 24,
-    paddingTop: Platform.OS === "android" ? 30 : 10,
-    paddingBottom: 40,
-  },
-  card: {
-    backgroundColor: "#FFFFFF",
-    borderRadius: 20,
-    padding: 20,
-    alignItems: "center",
-    marginBottom: 30,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 4,
-  },
-  carTitle: {
-    fontSize: 28,
-    fontWeight: "bold",
-    color: "#1F2937", // gris oscuro
-    marginBottom: 6,
-  },
-  carSubtitle: {
-    fontSize: 16,
-    color: "#6B7280", // gris claro
-    fontWeight: "500",
-  },
-  imageWrapper: {
-    marginTop: 44,
-    marginBottom: 40,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  buttonsContainer: {
-    marginTop: 44,
-    gap: 16,
-  },
-  button: {
-    backgroundColor: "#2563EB", // azul moderno
-    paddingVertical: 16,
-    borderRadius: 14,
-    alignItems: "center",
-    justifyContent: "center",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.15,
-    shadowRadius: 4,
-    elevation: 3,
-  },
-  buttonText: {
-    color: "#FFFFFF",
-    fontSize: 16,
-    fontWeight: "600",
-    letterSpacing: 0.3,
-  },
-});

@@ -13,6 +13,7 @@ import { Picker } from '@react-native-picker/picker';
 import DateTimePicker from '@react-native-community/datetimepicker'; // Date and time picker component
 import moment from 'moment'; // For formatting dates
 import { useFocusEffect } from '@react-navigation/native'; // For resetting states when screen is focused
+import { useTheme } from '@/src/presentation/theme/ThemeContext'; // Importar el hook de tema
 
 export default function AppointmentForm() {
     // State variables for form inputs
@@ -24,6 +25,7 @@ export default function AppointmentForm() {
     const [showDatePicker, setShowDatePicker] = useState(false); // State to control DateTimePicker visibility
     const [mode, setMode] = useState<'date' | 'time'>('date');
 
+    const { theme } = useTheme(); // Usamos el tema actual
 
     // Reset form fields when the screen comes into focus
     // useCallback ensures the function isn't recreated on every render
@@ -79,20 +81,28 @@ export default function AppointmentForm() {
      * Renders additional form fields based on the selected appointment type.
      */
     const renderFormByType = () => {
+        // Define dynamic styles for inputs within this function to use 'theme'
+        const inputThemedStyle = {
+            backgroundColor: theme.card,
+            borderColor: theme.border,
+            color: theme.text,
+        };
+        const placeholderThemedColor = theme.icon; // Using icon color for placeholders
+
         switch (selectedType) {
             case 'mantenimiento':
                 return (
                     <>
                         <TextInput
                             placeholder="Kilometraje actual"
-                            style={styles.input}
-                            placeholderTextColor="#135D66"
+                            style={[dynamicStyles.input, inputThemedStyle]}
+                            placeholderTextColor={placeholderThemedColor}
                             keyboardType="numeric" // Suggest numeric keyboard
                         />
                         <TextInput
                             placeholder="Último servicio"
-                            style={styles.input}
-                            placeholderTextColor="#135D66"
+                            style={[dynamicStyles.input, inputThemedStyle]}
+                            placeholderTextColor={placeholderThemedColor}
                         />
                     </>
                 );
@@ -101,13 +111,13 @@ export default function AppointmentForm() {
                     <>
                         <TextInput
                             placeholder="Fecha de última revisión"
-                            style={styles.input}
-                            placeholderTextColor="#135D66"
+                            style={[dynamicStyles.input, inputThemedStyle]}
+                            placeholderTextColor={placeholderThemedColor}
                         />
                         <TextInput
                             placeholder="¿Algún problema actual?"
-                            style={styles.input}
-                            placeholderTextColor="#135D66"
+                            style={[dynamicStyles.input, inputThemedStyle]}
+                            placeholderTextColor={placeholderThemedColor}
                             multiline
                             numberOfLines={2}
                         />
@@ -118,13 +128,13 @@ export default function AppointmentForm() {
                     <>
                         <TextInput
                             placeholder="Tipo de aceite usado"
-                            style={styles.input}
-                            placeholderTextColor="#135D66"
+                            style={[dynamicStyles.input, inputThemedStyle]}
+                            placeholderTextColor={placeholderThemedColor}
                         />
                         <TextInput
                             placeholder="Último cambio de aceite"
-                            style={styles.input}
-                            placeholderTextColor="#135D66"
+                            style={[dynamicStyles.input, inputThemedStyle]}
+                            placeholderTextColor={placeholderThemedColor}
                         />
                     </>
                 );
@@ -133,13 +143,13 @@ export default function AppointmentForm() {
                     <>
                         <TextInput
                             placeholder="Estado actual de los rines"
-                            style={styles.input}
-                            placeholderTextColor="#135D66"
+                            style={[dynamicStyles.input, inputThemedStyle]}
+                            placeholderTextColor={placeholderThemedColor}
                         />
                         <TextInput
                             placeholder="¿Pintar, pulir o reemplazar?"
-                            style={styles.input}
-                            placeholderTextColor="#135D66"
+                            style={[dynamicStyles.input, inputThemedStyle]}
+                            placeholderTextColor={placeholderThemedColor}
                         />
                     </>
                 );
@@ -148,13 +158,13 @@ export default function AppointmentForm() {
                     <>
                         <TextInput
                             placeholder="Zona a pintar (puerta, capó, etc.)"
-                            style={styles.input}
-                            placeholderTextColor="#135D66"
+                            style={[dynamicStyles.input, inputThemedStyle]}
+                            placeholderTextColor={placeholderThemedColor}
                         />
                         <TextInput
                             placeholder="¿Color original o personalizado?"
-                            style={styles.input}
-                            placeholderTextColor="#135D66"
+                            style={[dynamicStyles.input, inputThemedStyle]}
+                            placeholderTextColor={placeholderThemedColor}
                         />
                     </>
                 );
@@ -163,13 +173,13 @@ export default function AppointmentForm() {
                     <>
                         <TextInput
                             placeholder="Estado actual de las llantas"
-                            style={styles.input}
-                            placeholderTextColor="#135D66"
+                            style={[dynamicStyles.input, inputThemedStyle]}
+                            placeholderTextColor={placeholderThemedColor}
                         />
                         <TextInput
                             placeholder="¿Revisión, alineación o cambio?"
-                            style={styles.input}
-                            placeholderTextColor="#135D66"
+                            style={[dynamicStyles.input, inputThemedStyle]}
+                            placeholderTextColor={placeholderThemedColor}
                         />
                     </>
                 );
@@ -178,13 +188,13 @@ export default function AppointmentForm() {
                     <>
                         <TextInput
                             placeholder="Parte a intervenir (asientos, techo...)"
-                            style={styles.input}
-                            placeholderTextColor="#135D66"
+                            style={[dynamicStyles.input, inputThemedStyle]}
+                            placeholderTextColor={placeholderThemedColor}
                         />
                         <TextInput
                             placeholder="¿Deseas limpieza, reparación o cambio?"
-                            style={styles.input}
-                            placeholderTextColor="#135D66"
+                            style={[dynamicStyles.input, inputThemedStyle]}
+                            placeholderTextColor={placeholderThemedColor}
                         />
                     </>
                 );
@@ -194,8 +204,8 @@ export default function AppointmentForm() {
                         placeholder="Describe tu necesidad"
                         multiline
                         numberOfLines={3}
-                        style={[styles.input, { height: 80, textAlignVertical: 'top' }]}
-                        placeholderTextColor="#135D66"
+                        style={[dynamicStyles.input, inputThemedStyle, { height: 80, textAlignVertical: 'top' }]}
+                        placeholderTextColor={placeholderThemedColor}
                     />
                 );
             default:
@@ -203,17 +213,95 @@ export default function AppointmentForm() {
         }
     };
 
+    // Define styles within the component to access the 'theme' object
+    const dynamicStyles = StyleSheet.create({
+        container: {
+            padding: 20,
+            backgroundColor: theme.background, // Use theme background color
+            flexGrow: 1, // Allows the ScrollView to grow and cover available space
+            justifyContent: 'center', // Centers content vertically if there's extra space
+        },
+        title: {
+            fontSize: 26,
+            fontWeight: 'bold',
+            color: theme.text, // Use theme text color
+            textAlign: 'center',
+            marginBottom: 20,
+        },
+        input: {
+            backgroundColor: theme.card, // Use theme card color
+            borderColor: theme.border, // Use theme border color
+            borderWidth: 1,
+            borderRadius: 10,
+            padding: 12,
+            marginBottom: 15,
+            fontSize: 16,
+            color: theme.text, // Use theme text color
+        },
+        secondaryButton: { // This is the final "Agendar cita" button
+            backgroundColor: theme.primary, // Use theme primary color
+            padding: 12,
+            borderRadius: 10,
+            marginTop: 10,
+            shadowColor: '#000',
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.25,
+            shadowRadius: 3.84,
+            elevation: 5,
+        },
+        secondaryButtonText: {
+            color: theme.buttonText, // Use theme button text color
+            fontSize: 18,
+            textAlign: 'center',
+            fontWeight: 'bold',
+        },
+        pickerContainer: {
+            backgroundColor: theme.card, // Use theme card color
+            borderRadius: 10,
+            marginBottom: 15,
+            borderColor: theme.border, // Use theme border color
+            borderWidth: 1,
+            padding: 10,
+        },
+        picker: {
+            color: theme.text, // Use theme text color for picker
+        },
+        label: {
+            color: theme.text, // Use theme text color for label
+            fontWeight: '600',
+            marginBottom: 5,
+        },
+        datePickerButton: {
+            backgroundColor: theme.card, // Use theme card color
+            borderColor: theme.border, // Use theme border color
+            borderWidth: 1,
+            padding: 12,
+            borderRadius: 10,
+            marginBottom: 15,
+            shadowColor: '#000',
+            shadowOffset: { width: 0, height: 1 },
+            shadowOpacity: 0.20,
+            shadowRadius: 1.41,
+            elevation: 2,
+        },
+        datePickerText: {
+            color: theme.text, // Use theme text color
+            fontSize: 16,
+            textAlign: 'center',
+        },
+    });
+
     return (
-        <ScrollView contentContainerStyle={styles.container}>
-            <Text style={styles.title}>Formulario de Citas de Vehículos</Text>
+        <ScrollView contentContainerStyle={dynamicStyles.container}>
+            <Text style={dynamicStyles.title}>Formulario de Citas de Vehículos</Text>
 
             {/* Owner Name Input */}
             <TextInput
                 placeholder="Nombre del propietario"
                 value={name}
                 onChangeText={setName}
-                style={styles.input}
-                placeholderTextColor="#135D66"
+                style={dynamicStyles.input}
+                placeholderTextColor={theme.icon} // Use theme icon color for placeholder
             />
 
             {/* Vehicle/Plate Input */}
@@ -221,33 +309,29 @@ export default function AppointmentForm() {
                 placeholder="Vehículo o placa"
                 value={vehicle}
                 onChangeText={setVehicle}
-                style={styles.input}
-                placeholderTextColor="#135D66"
+                style={dynamicStyles.input}
+                placeholderTextColor={theme.icon} // Use theme icon color for placeholder
             />
 
             {/* Appointment Type Picker */}
-            <View style={styles.pickerContainer}>
-                <Text style={styles.label}>Tipo de cita</Text>
+            <View style={dynamicStyles.pickerContainer}>
+                <Text style={dynamicStyles.label}>Tipo de cita</Text>
                 <Picker
                     selectedValue={selectedType}
                     onValueChange={(itemValue) => setSelectedType(itemValue)}
-                    style={styles.picker}
+                    style={dynamicStyles.picker}
                     // Platform-specific styling for Picker text (e.g., iOS requires height adjustment)
-                    itemStyle={Platform.OS === 'ios' ? { height: 120 } : {}}
+                    itemStyle={Platform.OS === 'ios' ? { height: 120, color: theme.text } : {}} // Apply theme color to Picker items
                 >
-                    <Picker.Item label="Selecciona un tipo" value="" />
-                    <Picker.Item label="Mantenimiento general" value="mantenimiento" />
-                    <Picker.Item label="Revisión técnica" value="revision" />
-                    <Picker.Item label="Cambio de aceite" value="aceite" />
-                    <Picker.Item label="Selecciona un tipo" value="" />
-                    <Picker.Item label="Mantenimiento general" value="mantenimiento" />
-                    <Picker.Item label="Revisión técnica" value="revision" />
-                    <Picker.Item label="Cambio de aceite" value="aceite" />
-                    <Picker.Item label="Rines" value="rines" />
-                    <Picker.Item label="Pintura" value="pintura" />
-                    <Picker.Item label="Llantas" value="llantas" />
-                    <Picker.Item label="Tapicería" value="tapiceria" />
-                    <Picker.Item label="Otro" value="otro" />
+                    <Picker.Item label="Selecciona un tipo" value="" color={theme.icon} /> {/* Use theme icon color for placeholder item */}
+                    <Picker.Item label="Mantenimiento general" value="mantenimiento" color={theme.text} />
+                    <Picker.Item label="Revisión técnica" value="revision" color={theme.text} />
+                    <Picker.Item label="Cambio de aceite" value="aceite" color={theme.text} />
+                    <Picker.Item label="Rines" value="rines" color={theme.text} />
+                    <Picker.Item label="Pintura" value="pintura" color={theme.text} />
+                    <Picker.Item label="Llantas" value="llantas" color={theme.text} />
+                    <Picker.Item label="Tapicería" value="tapiceria" color={theme.text} />
+                    <Picker.Item label="Otro" value="otro" color={theme.text} />
                 </Picker>
             </View>
 
@@ -261,29 +345,29 @@ export default function AppointmentForm() {
                 onChangeText={setComments}
                 multiline
                 numberOfLines={4}
-                style={[styles.input, { height: 100, textAlignVertical: 'top' }]}
-                placeholderTextColor="#135D66"
+                style={[dynamicStyles.input, { height: 100, textAlignVertical: 'top' }]}
+                placeholderTextColor={theme.icon} // Use theme icon color for placeholder
             />
 
             {/* Button to open the date and time picker */}
             <TouchableOpacity
-                style={styles.datePickerButton}
+                style={dynamicStyles.datePickerButton}
                 onPress={() => {
                     setShowDatePicker(true);
                     setMode('date'); // primero seleccionamos la fecha
                 }}
             >
-                <Text style={styles.datePickerText}>
+                <Text style={dynamicStyles.datePickerText}>
                     Selecciona fecha y hora: {moment(date).format('DD/MM/YYYY h:mm A')}
                 </Text>
             </TouchableOpacity>
 
             {/* DateTimePicker component: only shown when showDatePicker is true.
-          - value: The currently selected date and time.
-          - mode: "datetime" ensures both date and time selectors appear.
-                  Use "date" for date only, "time" for time only.
-          - display: "default" uses the native OS interface.
-          - onChange: Fired when the user selects a date/time.
+            - value: The currently selected date and time.
+            - mode: "datetime" ensures both date and time selectors appear.
+                    Use "date" for date only, "time" for time only.
+            - display: "default" uses the native OS interface.
+            - onChange: Fired when the user selects a date/time.
       */}
             {showDatePicker && (
                 <DateTimePicker
@@ -310,91 +394,16 @@ export default function AppointmentForm() {
                             setShowDatePicker(false); // cerrar después de la hora
                         }
                     }}
+                    // Ensure the text color of the DateTimePicker adapts to the theme
+                    textColor={theme.text} // This might not work on all platforms/versions
                 />
             )}
 
 
             {/* Schedule Appointment Button */}
-            <TouchableOpacity style={styles.secondaryButton} onPress={handleAppointment}>
-                <Text style={styles.secondaryButtonText}>Agendar cita</Text>
+            <TouchableOpacity style={dynamicStyles.secondaryButton} onPress={handleAppointment}>
+                <Text style={dynamicStyles.secondaryButtonText}>Agendar cita</Text>
             </TouchableOpacity>
         </ScrollView>
     );
 }
-
-const styles = StyleSheet.create({
-    container: {
-        padding: 20,
-        backgroundColor: '#E3FEF7',
-        flexGrow: 1, // Allows the ScrollView to grow and cover available space
-        justifyContent: 'center', // Centers content vertically if there's extra space
-    },
-    title: {
-        fontSize: 26,
-        fontWeight: 'bold',
-        color: '#003C43',
-        textAlign: 'center',
-        marginBottom: 20,
-    },
-    input: {
-        backgroundColor: '#fff',
-        borderColor: '#135D66',
-        borderWidth: 1,
-        borderRadius: 10,
-        padding: 12,
-        marginBottom: 15,
-        fontSize: 16,
-        color: '#003C43',
-    },
-    secondaryButton: { // This is the final "Agendar cita" button
-        backgroundColor: '#77B0AA',
-        padding: 12,
-        borderRadius: 10,
-        marginTop: 10,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.25,
-        shadowRadius: 3.84,
-        elevation: 5,
-    },
-    secondaryButtonText: {
-        color: '#003C43',
-        fontSize: 18,
-        textAlign: 'center',
-        fontWeight: 'bold',
-    },
-    pickerContainer: {
-        backgroundColor: '#fff',
-        borderRadius: 10,
-        marginBottom: 15,
-        borderColor: '#135D66',
-        borderWidth: 1,
-        padding: 10,
-    },
-    picker: {
-        color: '#003C43',
-    },
-    label: {
-        color: '#135D66',
-        fontWeight: '600',
-        marginBottom: 5,
-    },
-    datePickerButton: {
-        backgroundColor: '#fff',
-        borderColor: '#135D66',
-        borderWidth: 1,
-        padding: 12,
-        borderRadius: 10,
-        marginBottom: 15,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 1 },
-        shadowOpacity: 0.20,
-        shadowRadius: 1.41,
-        elevation: 2,
-    },
-    datePickerText: {
-        color: '#003C43',
-        fontSize: 16,
-        textAlign: 'center',
-    },
-});

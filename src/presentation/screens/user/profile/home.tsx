@@ -1,187 +1,188 @@
 import React from 'react';
 import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity } from 'react-native';
-import { Ionicons } from '@expo/vector-icons'; // Si usas Expo, o @fortawesome/react-native-fontawesome para otros
+import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
+import { useTheme } from '@/src/presentation/theme/ThemeContext'; // Importar el hook de tema
 
 export default function Profile() {
+  const { theme } = useTheme(); // Usamos el tema actual
+
   const user = {
     name: 'Nombre del Usuario',
     username: '@usuarioejemplo',
     bio: '¡Hola! Soy un desarrollador de React Native apasionado por crear experiencias de usuario increíbles.',
-    profilePicture: 'https://via.placeholder.com/150', // Reemplaza con una URL de imagen real o una imagen local
+    profilePicture: 'https://placehold.co/150x150/007B8C/FFFFFF?text=Perfil', // Placeholder con colores del tema default
     followers: 1234,
     following: 567,
     posts: 42,
   };
 
   const handleEditProfile = () => {
-    // Lógica para navegar a la pantalla de edición de perfil
     console.log('Editar perfil presionado');
+    // router.push('/(user)/edit-profile'); // Ejemplo de navegación
   };
 
   const handleSettings = () => {
- 
-    router.push('/(user)/settings')
+    router.push('/(user)/settings');
   };
 
-  return (
-    <ScrollView style={styles.container}>
-      <View style={styles.header}>
-        <Image source={{ uri: user.profilePicture }} style={styles.profileImage} />
-        <Text style={styles.userName}>{user.name}</Text>
-        <Text style={styles.username}>{user.username}</Text>
+  // Definir los estilos dentro del componente para acceder al objeto 'theme'
+  const dynamicStyles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: theme.background,
+    },
+    header: {
+      alignItems: 'center',
+      paddingVertical: 20,
+      backgroundColor: theme.card,
+      borderBottomLeftRadius: 20,
+      borderBottomRightRadius: 20,
+      shadowColor: '#000', // Las sombras suelen ser fijas o muy sutiles
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.1,
+      shadowRadius: 4,
+      elevation: 3,
+    },
+    profileImage: {
+      width: 120,
+      height: 120,
+      borderRadius: 60,
+      borderWidth: 3,
+      borderColor: theme.primary, // Borde de imagen de perfil con color primario
+      marginBottom: 10,
+    },
+    userName: {
+      fontSize: 26,
+      fontWeight: 'bold',
+      color: theme.text,
+      marginBottom: 5,
+    },
+    username: {
+      fontSize: 18,
+      color: theme.icon, // Usar color de icono para un gris más suave
+      marginBottom: 15,
+    },
+    editButton: {
+      backgroundColor: theme.primary, // Botón de editar con color primario
+      paddingVertical: 8,
+      paddingHorizontal: 20,
+      borderRadius: 20,
+      marginBottom: 15,
+    },
+    editButtonText: {
+      color: theme.buttonText, // Texto del botón con color de texto de botón
+      fontSize: 16,
+      fontWeight: '600',
+    },
+    bio: {
+      fontSize: 16,
+      color: theme.text, // Bio con color de texto principal
+      textAlign: 'center',
+      paddingHorizontal: 20,
+      marginBottom: 20,
+    },
+    statsContainer: {
+      flexDirection: 'row',
+      justifyContent: 'space-around',
+      width: '100%',
+      paddingHorizontal: 20,
+    },
+    statItem: {
+      alignItems: 'center',
+    },
+    statNumber: {
+      fontSize: 20,
+      fontWeight: 'bold',
+      color: theme.text, // Números de estadísticas con color de texto principal
+    },
+    statLabel: {
+      fontSize: 14,
+      color: theme.icon, // Etiquetas de estadísticas con color de icono
+    },
+    body: {
+      padding: 20,
+    },
+    sectionTitle: {
+      fontSize: 22,
+      fontWeight: 'bold',
+      color: theme.text, // Título de sección con color de texto principal
+      marginBottom: 15,
+      marginTop: 10,
+    },
+    postPlaceholder: {
+      backgroundColor: theme.border, // Placeholder de publicaciones con color de borde
+      borderRadius: 10,
+      padding: 20,
+      alignItems: 'center',
+      justifyContent: 'center',
+      height: 150,
+      marginBottom: 20,
+    },
+    postText: {
+      fontSize: 16,
+      color: theme.icon, // Texto de placeholder con color de icono
+    },
+    settingsButton: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      backgroundColor: theme.card, // Botón de configuración con color de tarjeta
+      padding: 15,
+      borderRadius: 10,
+      marginTop: 20,
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 1 },
+      shadowOpacity: 0.1,
+      shadowRadius: 2,
+      elevation: 2,
+    },
+    settingsButtonText: {
+      marginLeft: 10,
+      fontSize: 18,
+      color: theme.icon, // Texto del botón de configuración con color de icono
+    },
+  });
 
-        <TouchableOpacity style={styles.editButton} onPress={handleEditProfile}>
-          <Text style={styles.editButtonText}>Editar Perfil</Text>
+  return (
+    <ScrollView style={dynamicStyles.container}>
+      <View style={dynamicStyles.header}>
+        <Image source={{ uri: user.profilePicture }} style={dynamicStyles.profileImage} />
+        <Text style={dynamicStyles.userName}>{user.name}</Text>
+        <Text style={dynamicStyles.username}>{user.username}</Text>
+
+        <TouchableOpacity style={dynamicStyles.editButton} onPress={handleEditProfile}>
+          <Text style={dynamicStyles.editButtonText}>Editar Perfil</Text>
         </TouchableOpacity>
 
-        <Text style={styles.bio}>{user.bio}</Text>
+        <Text style={dynamicStyles.bio}>{user.bio}</Text>
 
-        <View style={styles.statsContainer}>
-          <View style={styles.statItem}>
-            <Text style={styles.statNumber}>{user.posts}</Text>
-            <Text style={styles.statLabel}>Publicaciones</Text>
+        <View style={dynamicStyles.statsContainer}>
+          <View style={dynamicStyles.statItem}>
+            <Text style={dynamicStyles.statNumber}>{user.posts}</Text>
+            <Text style={dynamicStyles.statLabel}>Publicaciones</Text>
           </View>
-          <View style={styles.statItem}>
-            <Text style={styles.statNumber}>{user.followers}</Text>
-            <Text style={styles.statLabel}>Seguidores</Text>
+          <View style={dynamicStyles.statItem}>
+            <Text style={dynamicStyles.statNumber}>{user.followers}</Text>
+            <Text style={dynamicStyles.statLabel}>Seguidores</Text>
           </View>
-          <View style={styles.statItem}>
-            <Text style={styles.statNumber}>{user.following}</Text>
-            <Text style={styles.statLabel}>Siguiendo</Text>
+          <View style={dynamicStyles.statItem}>
+            <Text style={dynamicStyles.statNumber}>{user.following}</Text>
+            <Text style={dynamicStyles.statLabel}>Siguiendo</Text>
           </View>
         </View>
       </View>
 
-      <View style={styles.body}>
-        {/* Aquí puedes añadir más secciones, como publicaciones, galerías, etc. */}
-        <Text style={styles.sectionTitle}>Mis Publicaciones</Text>
-        {/* Ejemplo de una sección de publicaciones (puedes usar FlatList para listas reales) */}
-        <View style={styles.postPlaceholder}>
-          <Text style={styles.postText}>¡Tu contenido de publicaciones va aquí!</Text>
+      <View style={dynamicStyles.body}>
+        <Text style={dynamicStyles.sectionTitle}>Mis Publicaciones</Text>
+        <View style={dynamicStyles.postPlaceholder}>
+          <Text style={dynamicStyles.postText}>¡Tu contenido de publicaciones va aquí!</Text>
         </View>
 
-        <TouchableOpacity style={styles.settingsButton} onPress={handleSettings}>
-          <Ionicons name="settings-outline" size={24} color="#555" />
-          <Text style={styles.settingsButtonText}>Configuración</Text>
+        <TouchableOpacity style={dynamicStyles.settingsButton} onPress={handleSettings}>
+          <Ionicons name="settings-outline" size={24} color={theme.icon} /> {/* Icono de configuración con color de icono */}
+          <Text style={dynamicStyles.settingsButtonText}>Configuración</Text>
         </TouchableOpacity>
       </View>
     </ScrollView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#f0f2f5', // Un gris claro para el fondo
-  },
-  header: {
-    alignItems: 'center',
-    paddingVertical: 20,
-    backgroundColor: '#fff',
-    borderBottomLeftRadius: 20,
-    borderBottomRightRadius: 20,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-  },
-  profileImage: {
-    width: 120,
-    height: 120,
-    borderRadius: 60,
-    borderWidth: 3,
-    borderColor: '#007bff', // Un azul vibrante para el borde
-    marginBottom: 10,
-  },
-  userName: {
-    fontSize: 26,
-    fontWeight: 'bold',
-    color: '#333',
-    marginBottom: 5,
-  },
-  username: {
-    fontSize: 18,
-    color: '#666',
-    marginBottom: 15,
-  },
-  editButton: {
-    backgroundColor: '#007bff',
-    paddingVertical: 8,
-    paddingHorizontal: 20,
-    borderRadius: 20,
-    marginBottom: 15,
-  },
-  editButtonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  bio: {
-    fontSize: 16,
-    color: '#555',
-    textAlign: 'center',
-    paddingHorizontal: 20,
-    marginBottom: 20,
-  },
-  statsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    width: '100%',
-    paddingHorizontal: 20,
-  },
-  statItem: {
-    alignItems: 'center',
-  },
-  statNumber: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: '#333',
-  },
-  statLabel: {
-    fontSize: 14,
-    color: '#777',
-  },
-  body: {
-    padding: 20,
-  },
-  sectionTitle: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    color: '#333',
-    marginBottom: 15,
-    marginTop: 10,
-  },
-  postPlaceholder: {
-    backgroundColor: '#e0e0e0',
-    borderRadius: 10,
-    padding: 20,
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: 150,
-    marginBottom: 20,
-  },
-  postText: {
-    fontSize: 16,
-    color: '#777',
-  },
-  settingsButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#fff',
-    padding: 15,
-    borderRadius: 10,
-    marginTop: 20,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
-    elevation: 2,
-  },
-  settingsButtonText: {
-    marginLeft: 10,
-    fontSize: 18,
-    color: '#555',
-  },
-});
