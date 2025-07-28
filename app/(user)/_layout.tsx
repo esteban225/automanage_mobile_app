@@ -1,7 +1,5 @@
 import { Tabs, useRouter } from "expo-router"; // Importa Link y useRouter de expo-router para la navegación.
 import { AntDesign, FontAwesome5, Ionicons } from "@expo/vector-icons"; // Importa Ionicons para el icono de campana.
-// import { useColorScheme } => "@/components/useColorScheme"; // Comentado: Este componente no está disponible.
-import Colors from "@/constants/Colors";
 import { Pressable } from "react-native"; // Importa Pressable y View para hacer el icono interactivo.
 
 /**
