@@ -1,9 +1,11 @@
 import { View, Text, StyleSheet, Pressable } from "react-native";
 import { useLocalSearchParams } from "expo-router";
-import { Ionicons } from "@expo/vector-icons"; // Asegúrate de tener esto instalado
+import { Ionicons } from "@expo/vector-icons";
+import { useTheme } from '@/src/presentation/theme/ThemeContext';
 
 export default function ModalActionCircle() {
   const { name, lastChange, nextChange, description } = useLocalSearchParams();
+  const { theme } = useTheme();
 
   const formatDate = (dateString: string | string[] | undefined) => {
     if (!dateString) return "N/A";
@@ -35,21 +37,23 @@ export default function ModalActionCircle() {
   const progressPercent = Math.max(0, Math.min(100, (30 - statusInfo.daysLeft) / 30 * 100));
 
   return (
-    <View style={styles.centeredView}>
-      <View style={styles.card}>
-        <Text style={styles.title}>{name}</Text>
-        <View style={styles.divider} />
+    <View style={[styles.centeredView, { backgroundColor: theme.background }]}>
+      <View style={[styles.card, { backgroundColor: theme.card }]}>
+        <Text style={[styles.title, { color: theme.text }]}>{name}</Text>
+        <View style={[styles.divider, { backgroundColor: theme.border }]} />
 
-        <Text style={styles.description}>{description || "Sin descripción disponible."}</Text>
+        <Text style={[styles.description, , { color: theme.text }]}>
+          {description || "Sin descripción disponible."}
+        </Text>
 
         <View style={styles.detailBlock}>
-          <Text style={styles.label}>Último cambio:</Text>
-          <Text style={styles.value}>{formatDate(lastChange)}</Text>
+          <Text style={[styles.label, , { color: theme.text }]}>Último cambio:</Text>
+          <Text style={[styles.value, { color: theme.text }]}>{formatDate(lastChange)}</Text>
         </View>
 
         <View style={styles.detailBlock}>
-          <Text style={styles.label}>Próximo cambio:</Text>
-          <Text style={styles.value}>{formatDate(nextChange)}</Text>
+          <Text style={[styles.label, { color: theme.text } ]}>Próximo cambio:</Text>
+          <Text style={[styles.value, { color: theme.text }]}>{formatDate(nextChange)}</Text>
         </View>
 
         <View style={[styles.statusContainer, { backgroundColor: statusInfo.color + "20" }]}>
@@ -61,7 +65,7 @@ export default function ModalActionCircle() {
           <View style={[styles.progressBar, { width: `${progressPercent}%`, backgroundColor: statusInfo.color }]} />
         </View>
 
-        <Text style={styles.daysLeft}>
+        <Text style={[styles.daysLeft, { color: theme.text }]}>
           {statusInfo.daysLeft >= 0
             ? `Faltan ${statusInfo.daysLeft} días para el cambio.`
             : `Pasaron ${Math.abs(statusInfo.daysLeft)} días desde la fecha programada.`}
@@ -80,12 +84,10 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#EAFDFC",
     paddingHorizontal: 20,
   },
   card: {
     width: "100%",
-    backgroundColor: "#FFFFFF",
     borderRadius: 18,
     padding: 26,
     shadowColor: "#000",
@@ -97,18 +99,15 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: "700",
-    color: "#134E4A",
     marginBottom: 10,
     textAlign: "center",
   },
   divider: {
     height: 1,
-    backgroundColor: "#DDE2E2",
     marginVertical: 14,
   },
   description: {
     fontSize: 16,
-    color: "#495057",
     marginBottom: 18,
     textAlign: "center",
   },
@@ -119,12 +118,10 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 16,
-    color: "#6C757D",
   },
   value: {
     fontSize: 16,
     fontWeight: "600",
-    color: "#212529",
   },
   statusContainer: {
     marginTop: 20,
@@ -159,7 +156,6 @@ const styles = StyleSheet.create({
     marginTop: 16,
     textAlign: "center",
     fontSize: 15,
-    color: "#495057",
   },
   button: {
     marginTop: 20,

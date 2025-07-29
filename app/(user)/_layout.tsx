@@ -2,6 +2,7 @@ import { Tabs, useRouter } from "expo-router"; // Importa Link y useRouter de ex
 import { AntDesign, FontAwesome5, Ionicons } from "@expo/vector-icons"; // Importa Ionicons para el icono de campana.
 import { Pressable } from "react-native"; // Importa Pressable y View para hacer el icono interactivo.
 import { useTheme } from '@/src/presentation/theme/ThemeContext'; // Importar el hook de tema
+import HeaderBackButton from "@/components/HeaderBackButton";
 
 /**
  * @function TabBarIcon
@@ -114,6 +115,7 @@ export default function UserLayout() {
           headerShown: true, // Muestra el encabezado de la pantalla cuando está activa.
           headerTitle: "Emergencias", // Título a mostrar en el encabezado.
           href: null, // Oculta esta pestaña de la barra de navegación inferior.
+          headerLeft: () => <HeaderBackButton />,
         }}
       />
       {/* Pestaña "Notificaciones" - Oculta de la barra de pestañas */}
@@ -123,6 +125,7 @@ export default function UserLayout() {
           headerShown: true, // Muestra el encabezado.
           headerTitle: "Notificaciones", // Título del encabezado.
           href: null, // Oculta la pestaña.
+          headerLeft: () => <HeaderBackButton />,
         }}
       />
       {/* Pestaña "Perfil" - Visible en la barra de pestañas con icono de notificaciones */}
@@ -147,6 +150,37 @@ export default function UserLayout() {
           headerShown: true, // Muestra el encabezado.
           headerTitle: "Configuración", // Título del encabezado.
           href: null, // Oculta la pestaña.
+          headerLeft: () => <HeaderBackButton />,
+        }}
+      />
+      {/* Pestaña "Acerca de la App" - Oculta de la barra de pestañas */}
+      <Tabs.Screen
+        name="settings/(screens)/about-app" // Ruta a la pantalla de información de la app.
+        options={{
+          headerShown: true, // Muestra el encabezado.
+          headerTitle: "Acerca de la App", // Título del encabezado.
+          href: null, // Oculta la pestaña.
+          headerLeft: () => <HeaderBackButton />,
+        }}
+      />
+      {/* Pestaña "Centro de ayuda" - Oculta de la barra de pestañas */}
+      <Tabs.Screen
+        name="settings/(screens)/help-center" // Ruta a la pantalla de información de la app.
+        options={{
+          headerShown: true, // Muestra el encabezado.
+          headerTitle: "Centro de ayuda", // Título del encabezado.
+          href: null, // Oculta la pestaña.
+          headerLeft: () => <HeaderBackButton />,
+        }}
+      />
+      {/* Pestaña "editar perfil" - Oculta de la barra de pestañas */}
+      <Tabs.Screen
+        name="settings/(screens)/profile-edit" // Ruta a la pantalla de edición de perfil.
+        options={{
+          headerShown: true, // Muestra el encabezado.
+          headerTitle: "Editar Perfil", // Título del encabezado.
+          href: null, // Oculta la pestaña.
+          headerLeft: () => <HeaderBackButton />,
         }}
       />
       {/* ------------------------------------------
@@ -161,6 +195,7 @@ export default function UserLayout() {
           headerShown: true, // Muestra el encabezado.
           headerTitle: "Detalle del Vehículo", // Título del encabezado.
           href: null, // Oculta la pestaña.
+          headerLeft: () => <HeaderBackButton />,
         }}
       />
       <Tabs.Screen
@@ -169,6 +204,7 @@ export default function UserLayout() {
           headerShown: true, // Muestra el encabezado.
           headerTitle: "Citas", // Título del encabezado.
           href: null, // Oculta la pestaña.
+          headerLeft: () => <HeaderBackButton />,
         }}
       />
       <Tabs.Screen
@@ -177,6 +213,7 @@ export default function UserLayout() {
           headerShown: true, // Muestra el encabezado.
           headerTitle: "Mantenimiento", // Título del encabezado.
           href: null, // Oculta la pestaña.
+          headerLeft: () => <HeaderBackButton />,
         }}
       />
       <Tabs.Screen
@@ -185,6 +222,7 @@ export default function UserLayout() {
           headerShown: true, // Muestra el encabezado.
           headerTitle: "Documentos", // Título del encabezado.
           href: null, // Oculta la pestaña.
+          headerLeft: () => <HeaderBackButton />,
         }}
       />
       <Tabs.Screen
@@ -193,6 +231,7 @@ export default function UserLayout() {
           headerShown: true, // Muestra el encabezado.
           headerTitle: "Factura", // Título del encabezado.
           href: null, // Oculta la pestaña.
+          headerLeft: () => <HeaderBackButton />,
         }}
       />
       <Tabs.Screen
@@ -201,6 +240,7 @@ export default function UserLayout() {
           headerShown: true, // Muestra el encabezado.
           headerTitle: "Info", // Título del encabezado.
           href: null, // Oculta la pestaña.
+          headerLeft: () => <HeaderBackButton />,
         }}
       />
       {/* ------------------------------------------
@@ -215,6 +255,7 @@ export default function UserLayout() {
           headerShown: true, // Muestra el encabezado.
           headerTitle: "Aprender sobre tu vehículo", // Título del encabezado.
           href: null, // Oculta la pestaña.
+          headerLeft: () => <HeaderBackButton />,
         }}
       />
       <Tabs.Screen
@@ -223,6 +264,7 @@ export default function UserLayout() {
           headerShown: true, // Muestra el encabezado.
           headerTitle: "Ver Productos", // Título del encabezado.
           href: null, // Oculta la pestaña.
+          headerLeft: () => <HeaderBackButton />,
         }}
       />
     </Tabs>
