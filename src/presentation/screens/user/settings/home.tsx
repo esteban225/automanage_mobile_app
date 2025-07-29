@@ -40,24 +40,23 @@ export default function Settings() {
     ]);
   };
 
-  const navigateTo = (screenName) => { // Eliminado 'string' type hint, ya que no es JS estándar
+  const navigateTo = (screenName: string) => { // Añadido tipo explícito 'string'
     console.log(`Navegar a: ${screenName}`);
   };
 
+  const handleAboutApp = () => {
+    router.push('/(user)/settings/(screens)/about-app');
+  }
+
+  const handleHelpApp = () => {
+    router.push('/(user)/settings/(screens)/help-center');
+  }
   return (
     <ScrollView style={{ flex: 1, backgroundColor: theme.background }}>
       <View style={[styles.section, { backgroundColor: theme.card }]}>
         <Text style={[styles.sectionTitle, { color: theme.text, borderBottomColor: theme.border }]}>
           Cuenta
         </Text>
-
-        <TouchableOpacity style={[styles.option, { borderBottomColor: theme.border }]} onPress={() => navigateTo("profile-edit")}>
-          <View style={styles.optionContent}>
-            <Ionicons name="person-outline" size={24} color={theme.icon} />
-            <Text style={[styles.optionText, { color: theme.text }]}>Editar Perfil</Text>
-          </View>
-          <Ionicons name="chevron-forward-outline" size={20} color={theme.border} />
-        </TouchableOpacity>
 
         <TouchableOpacity style={[styles.option, { borderBottomColor: theme.border }]} onPress={() => navigateTo("change-password")}>
           <View style={styles.optionContent}>
@@ -96,20 +95,6 @@ export default function Settings() {
           />
         </View>
 
-        <View style={[styles.option, { borderBottomColor: theme.border }]}>
-          <View style={styles.optionContent}>
-            <Ionicons name="moon-outline" size={24} color={theme.icon} />
-            <Text style={[styles.optionText, { color: theme.text }]}>Modo Oscuro</Text>
-          </View>
-          <Switch
-            trackColor={{ false: "#c4c4c4", true: "#3b3b98" }}
-            thumbColor={darkModeEnabled ? "#ffffff" : "#f4f3f4"}
-            ios_backgroundColor="#d3d3d3"
-            onValueChange={setDarkModeEnabled}
-            value={darkModeEnabled}
-          />
-        </View>
-
         {/* Última opción en la sección no debe tener borderBottomWidth si no hay más elementos */}
         <View style={styles.optionLast}>
           <View style={styles.optionContent}>
@@ -141,7 +126,7 @@ export default function Settings() {
           Soporte
         </Text>
 
-        <TouchableOpacity style={[styles.option, { borderBottomColor: theme.border }]} onPress={() => navigateTo("help-center")}>
+        <TouchableOpacity style={[styles.option, { borderBottomColor: theme.border }]} onPress={handleHelpApp}>
           <View style={styles.optionContent}>
             <Ionicons name="help-circle-outline" size={24} color={theme.icon} />
             <Text style={[styles.optionText, { color: theme.text }]}>Centro de Ayuda</Text>
@@ -150,7 +135,7 @@ export default function Settings() {
         </TouchableOpacity>
 
         {/* Última opción en la sección no debe tener borderBottomWidth si no hay más elementos */}
-        <TouchableOpacity style={styles.optionLast} onPress={() => navigateTo("about-app")}>
+        <TouchableOpacity style={styles.optionLast} onPress={handleAboutApp}>
           <View style={styles.optionContent}>
             <Ionicons name="information-circle-outline" size={24} color={theme.icon} />
             <Text style={[styles.optionText, { color: theme.text }]}>Acerca de</Text>

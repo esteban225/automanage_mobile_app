@@ -14,22 +14,42 @@ import Animated, {
   Easing,
   interpolate,
 } from "react-native-reanimated";
-import { FontAwesome5, MaterialIcons, Ionicons, Entypo } from "@expo/vector-icons";
+import { Image } from "react-native";
 
 interface Props {
   visible: boolean;
   onPress: (index: number) => void;
 }
 
-const icons = [
-  <FontAwesome5 name="car" size={28} color="#001D1A" />,
-  <MaterialIcons name="build" size={28} color="#001D1A" />,
-  <Ionicons name="construct" size={28} color="#001D1A" />,
-  <Entypo name="water" size={28} color="#001D1A" />,
+const icons: React.ReactNode[] = [
+  <Image
+    key="motor"
+    source={require("@/assets/images/motor-electrico.png")}
+    style={{ width: 28, height: 28 }}
+    resizeMode="contain"
+  />,
+  <Image
+    key="llantas"
+    source={require("@/assets/images/llantas.png")}
+    style={{ width: 28, height: 28 }}
+    resizeMode="contain"
+  />,
+  <Image
+    key="aspiradora"
+    source={require("@/assets/images/aspiradora.png")}
+    style={{ width: 28, height: 28 }}
+    resizeMode="contain"
+  />,
+  <Image
+    key="instrumentos"
+    source={require("@/assets/images/instrumentos.png")}
+    style={{ width: 28, height: 28 }}
+    resizeMode="contain"
+  />,
 ];
 
-const neonColors = ["#00FFC6", "#FF00C8", "#00BFFF", "#FFD700"];
-const CIRCLE_SIZE = 70;
+const neonColors = ["#ffffffff", "#ffffffff", "#ffffffff", "#ffffffff"];
+const CIRCLE_SIZE = 60;
 const BORDER_RADIUS = CIRCLE_SIZE / 2;
 
 export default function ActionCircle({ visible, onPress }: Props) {
