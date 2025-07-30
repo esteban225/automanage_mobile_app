@@ -11,27 +11,23 @@ import {
 import * as ImagePicker from 'expo-image-picker';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useTheme } from '@/src/presentation/theme/ThemeContext';
-
-// ✅ Importar imagen local por defecto
-import defaultProfileImage from '../../../../../../assets/images/Icono_perfil.png'; // Usa ../../../ si no tienes alias
+import { Image as RNImage } from 'react-native';
+import CountryPicker, { Country, CountryCode } from 'react-native-country-picker-modal';
+import { Picker } from '@react-native-picker/picker';
 
 export default function ProfileScreen() {
   const { theme } = useTheme();
 
-  const [editingField, setEditingField] = useState<string | null>(null);
-
-  // ✅ Iniciar con imagen local por defecto
-  const [profileImage, setProfileImage] = useState<any>(defaultProfileImage);
+  const [isEditing, setIsEditing] = useState(false);
+  const [profileImage, setProfileImage] = useState<string | null>(null);
+  const [countryCode, setCountryCode] = useState<CountryCode>('CO');
+  const [country, setCountry] = useState<Country | null>(null);
+  const [city, setCity] = useState('Bogotá');
 
   const [fields, setFields] = useState({
     fullName: 'Nombre y Apellido',
     contact: 'Correo o número',
-    location: 'Ciudad, País',
   });
-
-  const handleEdit = (key: keyof typeof fields) => {
-    setEditingField(key);
-  };
 
   const handleChange = (key: keyof typeof fields, value: string) => {
     setFields({ ...fields, [key]: value });
@@ -44,8 +40,28 @@ export default function ProfileScreen() {
       quality: 1,
     });
 
-    if (!result.canceled) {
-      setProfileImage(result.assets[0].uri); // ✅ Guardar URI nueva
+    if (
+      result.assets &&
+      result.assets.length > 0 &&
+      typeof result.assets[0].uri === 'string'
+    ) {
+      setProfileImage(result.assets[0].uri);
+    }
+  };
+
+  const colombiaCities = ['Bogotá', 'Medellín', 'Cali', 'Barranquilla', 'Cartagena'];
+  const usaCities = ['New York', 'Los Angeles', 'Chicago', 'Houston', 'Miami'];
+  const mexicoCities = ['CDMX', 'Guadalajara', 'Monterrey', 'Puebla', 'Cancún'];
+
+  const getCities = () => {
+    switch (countryCode) {
+      case 'US':
+        return usaCities;
+      case 'MX':
+        return mexicoCities;
+      case 'CO':
+      default:
+        return colombiaCities;
     }
   };
 
@@ -53,37 +69,89 @@ export default function ProfileScreen() {
     <View style={[styles.container, { backgroundColor: theme.background }]}>
       <TouchableOpacity onPress={pickImage} style={styles.imageWrapper}>
         <Image
-          source={typeof profileImage === 'string' ? { uri: profileImage } : profileImage}
+          source={
+            typeof profileImage === 'string' && profileImage.trim() !== ''
+              ? { uri: profileImage }
+              : require("../../../../../../assets/images/Icono_perfil.png")
+          }
           style={styles.profileImage}
         />
       </TouchableOpacity>
 
-      <TouchableOpacity
-        onPress={() => setEditingField('fullName')}
-        style={styles.editIcon}
-      >
-        <MaterialIcons name="edit" size={22} color={theme.primary} />
-      </TouchableOpacity>
+      {!isEditing && (
+        <TouchableOpacity
+          onPress={() => setIsEditing(true)}
+          style={styles.editIcon}
+        >
+          <MaterialIcons name="edit" size={22} color={theme.primary} />
+        </TouchableOpacity>
+      )}
 
-      {(['fullName', 'contact', 'location'] as const).map((key) => (
+      {(['fullName', 'contact'] as const).map((key) => (
         <View key={key} style={styles.inputContainer}>
-          {editingField === key ? (
+          {isEditing ? (
             <TextInput
               style={[styles.input, { borderColor: theme.primary, color: theme.text }]}
               value={fields[key]}
               onChangeText={(text) => handleChange(key, text)}
-              onBlur={() => setEditingField(null)}
-              autoFocus
             />
           ) : (
-            <TouchableOpacity onPress={() => handleEdit(key)}>
-              <Text style={[styles.inputText, { color: theme.text }]}>
-                {fields[key]}
-              </Text>
-            </TouchableOpacity>
+            <Text style={[styles.inputText, { color: theme.text }]}>
+              {fields[key]}
+            </Text>
           )}
         </View>
       ))}
+
+      <View style={styles.inputContainer}>
+        {isEditing ? (
+          <>
+            <Text style={{ color: theme.text, marginBottom: 8 }}>País:</Text>
+            <CountryPicker
+              countryCode={countryCode}
+              withFilter
+              withFlag
+              withCountryNameButton
+              onSelect={(country) => {
+                setCountryCode(country.cca2);
+                setCountry(country);
+              }}
+              theme={{ backgroundColor: theme.background }}
+            />
+
+            <Text style={{ color: theme.text, marginTop: 12 }}>Ciudad:</Text>
+            <View style={[styles.input, { padding: 0 }]}>
+              <Picker
+                selectedValue={city}
+                onValueChange={(itemValue) => setCity(itemValue)}
+                style={{ color: theme.text }}
+              >
+                {getCities().map((c) => (
+                  <Picker.Item label={c} value={c} key={c} />
+                ))}
+              </Picker>
+            </View>
+          </>
+        ) : (
+          <>
+            <Text style={[styles.inputText, { color: theme.text }]}>
+              {/* {country ? country.name : 'País no seleccionado'} */}
+            </Text>
+            <Text style={[styles.inputText, { color: theme.text }]}>
+              Ciudad: {city}
+            </Text>
+          </>
+        )}
+      </View>
+
+      {isEditing && (
+        <TouchableOpacity
+          style={[styles.button, { borderColor: theme.primary }]}
+          onPress={() => setIsEditing(false)}
+        >
+          <Text style={[styles.buttonText, { color: theme.primary }]}>Guardar cambios</Text>
+        </TouchableOpacity>
+      )}
 
       <TouchableOpacity style={[styles.button, { borderColor: theme.primary }]}>
         <Text style={[styles.buttonText, { color: theme.primary }]}>Cambiar de cuenta</Text>
@@ -128,6 +196,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     padding: 6,
     elevation: 3,
+    zIndex: 10,
   },
   inputContainer: {
     width: '100%',

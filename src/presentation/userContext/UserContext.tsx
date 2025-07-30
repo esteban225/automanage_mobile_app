@@ -7,7 +7,7 @@ type UserContextType = {
     setProfileImage: (uri: string) => void;
 };
 
-const UserContext = createContext<UserContextType>({
+export const UserContext = createContext<UserContextType>({
     profileImage: '',
     setProfileImage: () => { },
 });
