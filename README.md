@@ -20,19 +20,48 @@ Automanage Mobile App es una aplicación móvil diseñada para la gestión efici
 ```
 📦app
  ┣ 📂(admin)
- ┃ ┗ 📜home.tsx
+ ┃ ┣ 📜index.tsx
+ ┃ ┗ 📜_layout.tsx
  ┣ 📂(auth)
  ┃ ┣ 📜login.tsx
  ┃ ┗ 📜register.tsx
  ┣ 📂(tabs)
  ┃ ┣ 📜index.tsx
- ┃ ┣ 📜two.tsx
  ┃ ┗ 📜_layout.tsx
  ┣ 📂(user)
- ┃ ┗ 📜home.tsx
+ ┃ ┣ 📂car
+ ┃ ┃ ┣ 📂(screens)
+ ┃ ┃ ┃ ┗ 📂CarScreens
+ ┃ ┃ ┃ ┃ ┣ 📜Appointments.tsx
+ ┃ ┃ ┃ ┃ ┣ 📜Detailing.tsx
+ ┃ ┃ ┃ ┃ ┣ 📜Invoice.tsx
+ ┃ ┃ ┃ ┃ ┣ 📜Maintenancie.tsx
+ ┃ ┃ ┃ ┃ ┣ 📜ModalActionCircle.tsx
+ ┃ ┃ ┃ ┃ ┗ 📜Papers.tsx
+ ┃ ┃ ┣ 📜index.tsx
+ ┃ ┃ ┗ 📜README_CAR_MODULE.md
+ ┃ ┣ 📂emergency
+ ┃ ┃ ┗ 📜index.tsx
+ ┃ ┣ 📂home
+ ┃ ┃ ┣ 📂(screens)
+ ┃ ┃ ┃ ┣ 📜LearningCar.tsx
+ ┃ ┃ ┃ ┗ 📜ViewProduct.tsx
+ ┃ ┃ ┗ 📜README_HOME_MODULE.md
+ ┃ ┣ 📂notifications
+ ┃ ┃ ┗ 📜index.tsx
+ ┃ ┣ 📂profile
+ ┃ ┃ ┣ 📜index.tsx
+ ┃ ┃ ┗ 📜README_PROFILE_MODULE.md
+ ┃ ┣ 📂settings
+ ┃ ┃ ┣ 📂(screens)
+ ┃ ┃ ┃ ┣ 📜about-app.tsx
+ ┃ ┃ ┃ ┣ 📜help-center.tsx
+ ┃ ┃ ┃ ┗ 📜profile-edit.tsx
+ ┃ ┃ ┗ 📜index.tsx
+ ┃ ┣ 📜index.tsx
+ ┃ ┗ 📜_layout.tsx
  ┣ 📜+html.tsx
  ┣ 📜+not-found.tsx
- ┣ 📜modal.tsx
  ┗ 📜_layout.tsx
 
 
@@ -58,11 +87,12 @@ Automanage Mobile App es una aplicación móvil diseñada para la gestión efici
  ┃ ┃ ┣ 📂auth
  ┃ ┃ ┃ ┗ 📂repositoryImpl
  ┃ ┃ ┃ ┃ ┗ 📜AuthRepositoryImpl.ts
- ┃ ┃ ┗ 📂client
+ ┃ ┃ ┣ 📂client
+ ┃ ┃ ┗ 📜axiosConfig.ts
  ┗ 📂presentation
  ┃ ┣ 📂providers
  ┃ ┃ ┗ 📜AuthProvider.tsx
- ┃ ┗ 📂screens
+ ┃ ┣ 📂screens
  ┃ ┃ ┣ 📂admin
  ┃ ┃ ┃ ┗ 📜home.tsx
  ┃ ┃ ┣ 📂auth
@@ -71,12 +101,14 @@ Automanage Mobile App es una aplicación móvil diseñada para la gestión efici
  ┃ ┃ ┃ ┣ 📜login.tsx
  ┃ ┃ ┃ ┗ 📜register.tsx
  ┃ ┃ ┣ 📂components
- ┃ ┃ ┃ ┗ 📜ColorsComponent.tsx
+ ┃ ┃ ┃ ┣ 📜ColorsComponent.tsx
+ ┃ ┃ ┃ ┗ 📜ThemeSwitcher.tsx
  ┃ ┃ ┗ 📂user
  ┃ ┃ ┃ ┣ 📂car
- ┃ ┃ ┃ ┃ ┣ 📂CardScreens
+ ┃ ┃ ┃ ┃ ┣ 📂CarScreens
  ┃ ┃ ┃ ┃ ┃ ┣ 📜CarDetailing.tsx
  ┃ ┃ ┃ ┃ ┃ ┣ 📜CarPapers.tsx
+ ┃ ┃ ┃ ┃ ┃ ┣ 📜InvoiceCar.tsx
  ┃ ┃ ┃ ┃ ┃ ┣ 📜MaintenanceCar.tsx
  ┃ ┃ ┃ ┃ ┃ ┗ 📜VehicleAppointments.tsx
  ┃ ┃ ┃ ┃ ┣ 📂components
@@ -84,28 +116,41 @@ Automanage Mobile App es una aplicación móvil diseñada para la gestión efici
  ┃ ┃ ┃ ┃ ┃ ┣ 📜CardService.tsx
  ┃ ┃ ┃ ┃ ┃ ┣ 📜ImageCar.tsx
  ┃ ┃ ┃ ┃ ┃ ┗ 📜ModalActionCircle.tsx
- ┃ ┃ ┃ ┃ ┗ 📜home.tsx
+ ┃ ┃ ┃ ┃ ┣ 📜home.tsx
+ ┃ ┃ ┃ ┃ ┗ 📜README.CAR.md
  ┃ ┃ ┃ ┣ 📂emergency
  ┃ ┃ ┃ ┃ ┣ 📂components
- ┃ ┃ ┃ ┃ ┃ ┗ 📜CardComponent.tsx
+ ┃ ┃ ┃ ┃ ┃ ┗ 📜EmergencyButton.tsx
  ┃ ┃ ┃ ┃ ┗ 📜home.tsx
  ┃ ┃ ┃ ┣ 📂home
  ┃ ┃ ┃ ┃ ┣ 📂components
- ┃ ┃ ┃ ┃ ┃ ┗ 📜CardComponent.tsx
+ ┃ ┃ ┃ ┃ ┃ ┣ 📜LearningCarComponent.tsx
+ ┃ ┃ ┃ ┃ ┃ ┗ 📜ProductComponent.tsx
+ ┃ ┃ ┃ ┃ ┣ 📂homeScreens
+ ┃ ┃ ┃ ┃ ┃ ┣ 📜CarLearning.tsx
+ ┃ ┃ ┃ ┃ ┃ ┗ 📜ProductoView.tsx
  ┃ ┃ ┃ ┃ ┗ 📜home.tsx
  ┃ ┃ ┃ ┣ 📂notifications
  ┃ ┃ ┃ ┃ ┣ 📂components
  ┃ ┃ ┃ ┃ ┃ ┗ 📜CardComponent.tsx
- ┃ ┃ ┃ ┃ ┗ 📜home.tsx
+ ┃ ┃ ┃ ┃ ┗ 📜HomeNotifications.tsx
  ┃ ┃ ┃ ┣ 📂profile
  ┃ ┃ ┃ ┃ ┣ 📂components
  ┃ ┃ ┃ ┃ ┃ ┗ 📜CardComponent.tsx
  ┃ ┃ ┃ ┃ ┗ 📜home.tsx
- ┃ ┃ ┃ ┣ 📂settings
+ ┃ ┃ ┃ ┗ 📂settings
  ┃ ┃ ┃ ┃ ┣ 📂components
  ┃ ┃ ┃ ┃ ┃ ┗ 📜CardComponent.tsx
+ ┃ ┃ ┃ ┃ ┣ 📂setttingsScreens
+ ┃ ┃ ┃ ┃ ┃ ┣ 📜about-app.tsx
+ ┃ ┃ ┃ ┃ ┃ ┣ 📜help-center.tsx
+ ┃ ┃ ┃ ┃ ┃ ┗ 📜profile-edit.tsx
  ┃ ┃ ┃ ┃ ┗ 📜home.tsx
- ┃ ┃ ┃ ┗ 📜home.tsx           
+ ┃ ┣ 📂theme
+ ┃ ┃ ┣ 📜ThemeContext.tsx
+ ┃ ┃ ┗ 📜themes.ts
+ ┃ ┗ 📂userContext
+ ┃ ┃ ┗ 📜UserContext.tsx        
 
 ```
 
@@ -130,13 +175,15 @@ Automanage Mobile App es una aplicación móvil diseñada para la gestión efici
     - Crea un archivo `.env` en la raíz del proyecto.
     - Ejemplo de contenido:
       ```
-      API_URL=http://localhost:3000/api
+      API_URL=http://localhost:8000/api
       NODE_ENV=development
       ```
 
 4. Inicia el servidor de desarrollo:
     ```
-    npm run dev
+    npx expo start
+    o
+    npx expo start --clear
     ```
 
 5. Accede a la aplicación desde tu emulador o dispositivo físico.
@@ -147,5 +194,3 @@ Automanage Mobile App es una aplicación móvil diseñada para la gestión efici
 ## recursos 
     - https://oblador.github.io/react-native-vector-icons/
     - https://icons.expo.fyi/Index 
-
-    <AntDesign name="shoppingcart" size={24} color="black" />
