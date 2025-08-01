@@ -1,7 +1,18 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, Vibration } from "react-native";
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, Vibration, Platform } from "react-native";
 import * as Notifications from "expo-notifications";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useTheme } from '@/src/presentation/theme/ThemeContext'; // Importa useTheme
+import { Feather } from '@expo/vector-icons'; // Para íconos de "X" o "papelera"
+
+// ✅ NECESARIO: Configurar handler global para mostrar notificaciones incluso en foreground
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: true,
+    shouldSetBadge: false,
+  }),
+});
 
 type NotificationItem = {
   id: string;
@@ -11,39 +22,52 @@ type NotificationItem = {
 };
 
 const defaultNotifications = [
-  { title: "Cambio de Aceite", body: "Es hora de cambiar el aceite de tu vehículo para mantenerlo en óptimas condiciones.", hour: 9, minute: 0 },
-  { title: "Revisión de Frenos", body: "No olvides revisar los frenos. La seguridad es primero. ¡Agenda una cita!", hour: 12, minute: 0 },
-  { title: "Alineación y Balanceo", body: "Tu auto podría necesitar alineación y balanceo para un manejo suave y seguro.", hour: 15, minute: 0 },
-  { title: "Inspección de Luces", body: "Verifica el funcionamiento de todas las luces de tu vehículo, ¡es crucial para la visibilidad!", hour: 17, minute: 0 },
-  { title: "Nivel de Líquidos", body: "Revisa los niveles de líquidos del motor, frenos y dirección. ¡Prevén problemas mayores!", hour: 19, minute: 0 },
-  { title: "Rotación de Llantas", body: "Para un desgaste uniforme y mayor durabilidad, considera rotar tus llantas.", hour: 10, minute: 30 },
-  { title: "Revisión de Batería", body: "Asegúrate de que tu batería esté en buen estado, ¡especialmente antes de un viaje largo!", hour: 14, minute: 0 },
-  { title: "Filtro de Aire", body: "Cambia el filtro de aire para mejorar el rendimiento y la eficiencia del combustible.", hour: 16, minute: 45 },
-  { title: "Limpieza Interior", body: "Dale un buen mantenimiento al interior de tu auto. ¡Un espacio limpio es un espacio feliz!", hour: 18, minute: 15 },
-  { title: "Lavado Exterior", body: "Mantén tu vehículo reluciente con un lavado regular.", hour: 11, minute: 0 },
+  { title: "Cambio de Aceite", body: "Es hora de cambiar el aceite de tu vehículo.", hour: 9, minute: 0 },
+  { title: "Revisión de Frenos", body: "No olvides revisar los frenos. ¡Agenda una cita!", hour: 12, minute: 0 },
+  { title: "Alineación y Balanceo", body: "Tu auto podría necesitar alineación.", hour: 15, minute: 0 },
+  { title: "Inspección de Luces", body: "Verifica todas las luces de tu vehículo.", hour: 17, minute: 0 },
+  { title: "Nivel de Líquidos", body: "Revisa los niveles del motor y frenos.", hour: 19, minute: 0 },
 ];
 
 export default function HomeNotifications() {
+  const { theme } = useTheme(); // Usa el hook useTheme
   const [receivedNotifications, setReceivedNotifications] = useState<NotificationItem[]>([]);
 
-  // Request notification permissions
   useEffect(() => {
     (async () => {
-      const { status } = await Notifications.requestPermissionsAsync();
-      if (status !== 'granted') {
-        alert('Se necesitan permisos de notificación para mostrar las alertas.');
+      const { status: existingStatus } = await Notifications.getPermissionsAsync();
+      let finalStatus = existingStatus;
+
+      if (existingStatus !== 'granted') {
+        const { status } = await Notifications.requestPermissionsAsync();
+        finalStatus = status;
+      }
+
+      if (finalStatus !== 'granted') {
+        alert('Se necesitan permisos de notificación para continuar.');
+        return;
+      }
+
+      // ✅ Crear canal para Android
+      if (Platform.OS === "android") {
+        await Notifications.setNotificationChannelAsync("default", {
+          name: "Notificaciones Generales",
+          importance: Notifications.AndroidImportance.HIGH,
+          sound: true,
+          vibrationPattern: [0, 250, 250, 250],
+          lightColor: "#FF231F7C", // Color de luz para notificaciones (puede ser temático si quieres)
+        });
       }
     })();
   }, []);
 
-  // 🧠 PROGRAMAR notificaciones diarias solo una vez
+  // ✅ Programar notificaciones diarias (solo una vez)
   useEffect(() => {
     const programarDiarias = async () => {
       const alreadyScheduled = await AsyncStorage.getItem("notificacionesProgramadas");
 
       if (!alreadyScheduled) {
-        // Clear all existing scheduled notifications to avoid duplicates if the app was reloaded
-        await Notifications.cancelAllScheduledNotificationsAsync(); 
+        await Notifications.cancelAllScheduledNotificationsAsync();
 
         for (const item of defaultNotifications) {
           await Notifications.scheduleNotificationAsync({
@@ -51,7 +75,6 @@ export default function HomeNotifications() {
               title: item.title,
               body: item.body,
               sound: true,
-              vibrate: [0, 250, 250, 250], // Vibrate pattern: wait, vibrate, wait, vibrate
               priority: Notifications.AndroidNotificationPriority.HIGH,
             },
             trigger: {
@@ -61,6 +84,7 @@ export default function HomeNotifications() {
             },
           });
         }
+
         await AsyncStorage.setItem("notificacionesProgramadas", "true");
       }
     };
@@ -68,7 +92,7 @@ export default function HomeNotifications() {
     programarDiarias();
   }, []);
 
-  // 🚀 MOSTRAR notificaciones inmediatas una por una cada 5 segundos
+  // ✅ Mostrar notificaciones inmediatas una por una cada 5 segundos
   useEffect(() => {
     let index = 0;
     const interval = setInterval(async () => {
@@ -80,13 +104,11 @@ export default function HomeNotifications() {
             title: item.title,
             body: item.body,
             sound: true,
-            vibrate: [0, 250, 250, 250], // Vibrate pattern for immediate notifications
             priority: Notifications.AndroidNotificationPriority.HIGH,
           },
-          trigger: null, // Triggers immediately
+          trigger: { seconds: 1 }, // ✅ Mostrar inmediatamente (más confiable que trigger: null)
         });
 
-        // Add to the displayed list, keeping only the latest 5
         const newNotification: NotificationItem = {
           id: Math.random().toString(),
           title: item.title,
@@ -95,116 +117,141 @@ export default function HomeNotifications() {
         };
 
         setReceivedNotifications((prev) => [newNotification, ...prev.slice(0, 4)]);
-        Vibration.vibrate(200); // Short vibration when an immediate notification is displayed
+        Vibration.vibrate(200);
         index++;
       } else {
         clearInterval(interval);
       }
-    }, 5000); // 5 seconds interval
+    }, 5000);
 
     return () => clearInterval(interval);
   }, []);
 
-  // 🗑️ Eliminar notificación de la lista
   const eliminarNotificacion = (id: string) => {
     setReceivedNotifications((prev) => prev.filter((notif) => notif.id !== id));
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Historial de Notificaciones</Text>
+    <View style={[modernNotificationStyles.container, { backgroundColor: theme.background }]}>
+      <Text style={[modernNotificationStyles.title, { color: theme.primary }]}>Tu Buzón de Automanage</Text>
+      <Text style={[modernNotificationStyles.subtitle, { color: theme.text }]}>
+        Aquí verás tus notificaciones importantes y recordatorios.
+      </Text>
+
       {receivedNotifications.length === 0 ? (
-        <Text style={styles.noNotificationsText}>No hay notificaciones recientes.</Text>
+        <View style={modernNotificationStyles.emptyState}>
+          <Feather name="bell-off" size={60} color={theme.icon} style={{ marginBottom: 15 }} />
+          <Text style={[modernNotificationStyles.noNotificationsText, { color: theme.text }]}>
+            No hay notificaciones recientes en este momento.
+          </Text>
+          <Text style={[modernNotificationStyles.noNotificationsText, { color: theme.text, fontSize: 14 }]}>
+            ¡Te avisaremos cuando haya algo nuevo!
+          </Text>
+        </View>
       ) : (
         <FlatList
           data={receivedNotifications}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
-            <View style={styles.notificationCard}>
-              <View style={styles.notificationContent}>
-                <Text style={styles.notificationTitle}>{item.title}</Text>
-                <Text style={styles.notificationBody}>{item.body}</Text>
-                <Text style={styles.notificationTime}>
-                  {item.date.toLocaleTimeString()} - {item.date.toLocaleDateString()}
+            <View style={[modernNotificationStyles.notificationCard, { backgroundColor: theme.card, borderColor: theme.border }]}>
+              <View style={modernNotificationStyles.notificationContent}>
+                <Text style={[modernNotificationStyles.notificationTitle, { color: theme.primary }]}>{item.title}</Text>
+                <Text style={[modernNotificationStyles.notificationBody, { color: theme.text }]}>{item.body}</Text>
+                <Text style={[modernNotificationStyles.notificationTime, { color: theme.secondary }]}>
+                  {item.date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} - {item.date.toLocaleDateString()}
                 </Text>
               </View>
-              <TouchableOpacity onPress={() => eliminarNotificacion(item.id)} style={styles.deleteButton}>
-                <Text style={styles.deleteButtonText}>✕</Text>
+              <TouchableOpacity
+                onPress={() => eliminarNotificacion(item.id)}
+                style={[modernNotificationStyles.deleteButton, { backgroundColor: theme.danger }]}
+              >
+                <Feather name="x" size={20} color={theme.buttonText} />
               </TouchableOpacity>
             </View>
           )}
+          contentContainerStyle={modernNotificationStyles.flatListContent}
+          showsVerticalScrollIndicator={false}
         />
       )}
     </View>
   );
 }
 
-const styles = StyleSheet.create({
+// 🎨 Estilos con ThemeContext integrado
+const modernNotificationStyles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
-    backgroundColor: "#e8f0f7", // Softer background
+    paddingHorizontal: 20, // Padding lateral consistente
+    paddingTop: 30, // Más padding superior
   },
   title: {
-    fontSize: 26,
+    fontSize: 28,
     fontWeight: "bold",
-    marginBottom: 20,
+    marginBottom: 8,
     textAlign: "center",
-    color: "#2c3e50", // Darker title color
+  },
+  subtitle: {
+    fontSize: 16,
+    textAlign: "center",
+    marginBottom: 30,
+    lineHeight: 22,
+  },
+  emptyState: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+    marginTop: 50, // Ajusta según el espacio deseado
   },
   noNotificationsText: {
-    fontSize: 16,
-    color: "#7f8c8d",
+    fontSize: 18,
     textAlign: "center",
-    marginTop: 50,
+    marginTop: 10,
+    lineHeight: 25,
+  },
+  flatListContent: {
+    paddingBottom: 20, // Espacio al final de la lista
   },
   notificationCard: {
-    backgroundColor: "#ffffff",
-    padding: 15,
-    marginBottom: 10,
-    borderRadius: 12, // More rounded corners
+    padding: 18,
+    marginBottom: 15,
+    borderRadius: 15, // Bordes más redondeados
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    shadowColor: "#000",
+    borderWidth: 1, // Borde sutil del tema
+    shadowColor: '#000', // Sombra suave para un efecto flotante
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
+    shadowOpacity: 0.08,
+    shadowRadius: 5,
     elevation: 3,
   },
   notificationContent: {
     flex: 1,
-    marginRight: 10,
+    marginRight: 15,
   },
   notificationTitle: {
     fontSize: 18,
     fontWeight: "bold",
-    color: "#34495e", // Darker text for title
     marginBottom: 4,
   },
   notificationBody: {
     fontSize: 14,
-    color: "#7f8c8d", // Muted text for body
     lineHeight: 20,
+    marginBottom: 5,
   },
   notificationTime: {
     fontSize: 12,
-    color: "#95a5a6", // Lighter text for time
-    marginTop: 8,
+    marginTop: 5,
     fontStyle: "italic",
+    opacity: 0.8, // Ligeramente más opaco
   },
   deleteButton: {
-    padding: 8,
-    borderRadius: 8,
-    backgroundColor: "#e74c3c", // Red color for delete
+    padding: 10,
+    borderRadius: 10, // Bordes redondeados
     justifyContent: "center",
     alignItems: "center",
-    width: 35, // Fixed width for a circle-like button
-    height: 35, // Fixed height
-  },
-  deleteButtonText: {
-    color: "white",
-    fontSize: 18,
-    fontWeight: "bold",
+    width: 40, // Tamaño fijo
+    height: 40, // Tamaño fijo
   },
 });
