@@ -156,7 +156,7 @@ export default function CarPapers() {
         },
         accordionTitle: {
             fontSize: 16,
-            color: theme.text, // Use theme text color
+            color: theme.buttonText, // Use theme text color
             fontWeight: "600",
         },
         chevron: {
@@ -212,7 +212,7 @@ export default function CarPapers() {
         },
         noteText: {
             fontSize: 14,
-            color: theme.text, // Use theme text color
+            color: theme.buttonText, // Use theme text color
             lineHeight: 20,
         },
     });

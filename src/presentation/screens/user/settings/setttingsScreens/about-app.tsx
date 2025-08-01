@@ -1,105 +1,132 @@
 import React from 'react';
 import { Text, View, ScrollView, StyleSheet } from 'react-native';
+import { useTheme } from '@/src/presentation/theme/ThemeContext'; // Asegúrate de que esta ruta sea correcta
+import { Feather } from '@expo/vector-icons'; // Importa Feather para los iconos
+
+// Mapeo de los primeros caracteres del título a iconos de Feather
+const stepIcons = {
+  '📝': 'edit',
+  '🚗': 'truck',
+  '🔔': 'bell',
+  '📅': 'calendar',
+  '✨': 'star',
+  '📋': 'clipboard',
+  '📞': 'phone',
+};
 
 export default function AboutApp() {
+  const { theme } = useTheme();
+
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.title}>Cómo usar la app del taller</Text>
+    <ScrollView contentContainerStyle={[modernStyles.container, { backgroundColor: theme.background }]}>
+      <Text style={[modernStyles.title, { color: theme.primary }]}>Descubre Automanage</Text>
+      <Text style={[modernStyles.subtitle, { color: theme.text }]}>
+        Tu aliado para el cuidado y gestión de tu vehículo.
+      </Text>
 
-      <View style={styles.card}>
-        <Text style={styles.stepTitle}>1. Crea tu cuenta</Text>
-        <Text style={styles.stepDescription}>
-          Regístrate con tu correo y contraseña para comenzar a gestionar el mantenimiento de tu vehículo. También puedes usar tu cuenta de Google si está disponible.
-        </Text>
-      </View>
+      {steps.map((step, index) => (
+        <View key={index} style={modernStyles.stepWrapper}>
+          <View style={[modernStyles.iconCircle, { backgroundColor: theme.primary + '1A' }]}>
+            <Feather name={stepIcons[step.title.split(' ')[0]]} size={30} color={theme.primary} />
+          </View>
+          <View style={modernStyles.textBlock}>
+            <Text style={[modernStyles.stepTitle, { color: theme.primary }]}>
+              {step.title.substring(4)}
+            </Text>
+            <Text style={[modernStyles.stepDescription, { color: theme.text }]}>
+              {step.description}
+            </Text>
+          </View>
+        </View>
+      ))}
 
-      <View style={styles.card}>
-        <Text style={styles.stepTitle}>2. Registra tu vehículo</Text>
-        <Text style={styles.stepDescription}>
-          Añade los datos de tu carro o moto (placa, modelo, marca, año) para que la app pueda brindarte alertas personalizadas y llevar el historial de mantenimiento.
-        </Text>
-      </View>
-
-      <View style={styles.card}>
-        <Text style={styles.stepTitle}>3. Recibe alertas de mantenimiento</Text>
-        <Text style={styles.stepDescription}>
-          La app te notificará cuando sea momento de cambiar aceite, revisar frenos, renovar el SOAT o hacer mantenimiento preventivo según el kilometraje o tiempo.
-        </Text>
-      </View>
-
-      <View style={styles.card}>
-        <Text style={styles.stepTitle}>4. Agenda tus citas</Text>
-        <Text style={styles.stepDescription}>
-          Elige el tipo de servicio que necesitas (mecánico, técnico, revisión, estética) y reserva directamente desde la app en la fecha y hora que prefieras.
-        </Text>
-      </View>
-
-      <View style={styles.card}>
-        <Text style={styles.stepTitle}>5. Personaliza tu vehículo</Text>
-        <Text style={styles.stepDescription}>
-          Accede a servicios de estética como limpieza profunda, polarizado, pintura o accesorios. Puedes ver catálogos y solicitar presupuestos fácilmente.
-        </Text>
-      </View>
-
-      <View style={styles.card}>
-        <Text style={styles.stepTitle}>6. Consulta historial y facturas</Text>
-        <Text style={styles.stepDescription}>
-          Visualiza los mantenimientos realizados, técnicos asignados, repuestos utilizados y los valores pagados. Toda la información queda guardada en tu perfil.
-        </Text>
-      </View>
-
-      <View style={styles.card}>
-        <Text style={styles.stepTitle}>7. Contacta al taller</Text>
-        <Text style={styles.stepDescription}>
-          Si necesitas asistencia o tienes dudas, puedes comunicarte con nuestro equipo de soporte directamente desde la app.
-        </Text>
-      </View>
-
-      <Text style={styles.footer}>
-        ¡Gracias por confiar en nosotros para el cuidado de tu vehículo! 🚗🔧
+      <Text style={[modernStyles.footer, { color: theme.secondary }]}>
+        ¡Gracias por elegirnos! Tu vehículo, nuestra prioridad. <Feather name="shield" size={16} color={theme.secondary} />
       </Text>
     </ScrollView>
   );
 }
 
-const styles = StyleSheet.create({
+// Datos de los pasos (sin cambios)
+const steps = [
+  {
+    title: '📝 1. Crea tu cuenta',
+    description: 'Regístrate con tu correo y contraseña para comenzar a gestionar el mantenimiento de tu vehículo. También puedes usar tu cuenta de Google si está disponible.',
+  },
+  {
+    title: '🚗 2. Registra tu vehículo',
+    description: 'Añade los datos de tu carro o moto (placa, modelo, marca, año) para recibir alertas personalizadas y llevar el historial de mantenimiento.',
+  },
+  {
+    title: '🔔 3. Recibe alertas',
+    description: 'Te notificamos cuando sea momento de hacer mantenimiento preventivo, cambiar aceite, renovar el SOAT y más, según el kilometraje o el tiempo.',
+  },
+  {
+    title: '📅 4. Agenda tus citas',
+    description: 'Elige el servicio (mecánico, técnico, revisión, estética) y agenda en la fecha y hora que prefieras directamente desde la app.',
+  },
+  {
+    title: '✨ 5. Personaliza tu vehículo',
+    description: 'Solicita servicios estéticos como limpieza, polarizado, pintura o accesorios. Consulta catálogos y cotiza fácilmente desde tu celular.',
+  },
+  {
+    title: '📋 6. Historial y facturas',
+    description: 'Consulta los servicios realizados, técnicos asignados, repuestos utilizados y valores pagados. Todo queda guardado en tu perfil.',
+  },
+  {
+    title: '📞 7. Contacta al taller',
+    description: 'Si necesitas ayuda, puedes comunicarte con nuestro equipo de soporte directamente desde la sección de contacto dentro de la app.',
+  },
+];
+
+const modernStyles = StyleSheet.create({
   container: {
-    padding: 20,
-    backgroundColor: '#F5F9FF',
+    paddingVertical: 30, // Más padding vertical
+    paddingHorizontal: 25, // Un poco más de padding horizontal
   },
   title: {
-    fontSize: 24,
+    fontSize: 32, // Título más grande y dominante
     fontWeight: 'bold',
-    marginBottom: 25,
+    marginBottom: 10,
     textAlign: 'center',
-    color: '#003C43',
   },
-  card: {
-    backgroundColor: '#E3FEF7',
-    borderRadius: 12,
-    padding: 16,
-    marginBottom: 15,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
-    elevation: 4,
+  subtitle: {
+    fontSize: 18,
+    textAlign: 'center',
+    marginBottom: 40, // Más espacio debajo del subtítulo
+    lineHeight: 25,
+  },
+  stepWrapper: {
+    flexDirection: 'row',
+    alignItems: 'flex-start', // Alinea el icono y el texto al inicio
+    marginBottom: 30, // Espacio entre cada paso
+  },
+  iconCircle: {
+    width: 60, // Tamaño fijo para el círculo del icono
+    height: 60,
+    borderRadius: 30, // Hace que sea un círculo perfecto
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 20, // Espacio a la derecha del círculo
+    // El backgroundColor viene del theme.primary con 10% de opacidad
+  },
+  textBlock: {
+    flex: 1, // Permite que el bloque de texto ocupe el resto del espacio
   },
   stepTitle: {
-    fontSize: 18,
+    fontSize: 22, // Título de paso más prominente
     fontWeight: '600',
-    marginBottom: 8,
-    color: '#135D66',
+    marginBottom: 5,
   },
   stepDescription: {
     fontSize: 16,
-    color: '#444',
-    lineHeight: 22,
+    lineHeight: 24,
+    // El color viene del theme.text
   },
   footer: {
-    marginTop: 30,
+    marginTop: 50, // Mucho más espacio arriba del pie de página
     fontSize: 16,
     textAlign: 'center',
-    color: '#0077cc',
+    fontWeight: '500', // Un poco más de peso para el texto del pie de página
   },
 });

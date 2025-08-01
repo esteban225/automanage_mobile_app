@@ -72,7 +72,7 @@ export function NotificationBell({ theme, router }) {
                 width: 8,
                 height: 8,
                 borderRadius: 4,
-                backgroundColor: "#67ff30ff",
+                backgroundColor: "#ff5930ff",
               }}
             />
           )}

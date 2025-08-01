@@ -180,7 +180,7 @@ export default function Profile() {
       marginTop: 10,
     },
     postPlaceholder: {
-      backgroundColor: theme.border,
+      backgroundColor: theme.card,
       borderRadius: 10,
       padding: 20,
       alignItems: 'center',
