@@ -11,15 +11,13 @@
     "splash": {
       "image": "./assets/images/logo2.png",
       "resizeMode": "contain",
-      "backgroundColor": "#f9fafc"
+      "backgroundColor": "#e6f0fa"  // azul pastel claro
     },
     "updates": {
       "fallbackToCacheTimeout": 0,
       "url": "https://u.expo.dev/automanage"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.automanage.mobile",
@@ -33,7 +31,7 @@
       "versionCode": 1,
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/logo2.png",
-        "backgroundColor": "#f9fafc"
+        "backgroundColor": "#e6f0fa" // mismo azul pastel claro
       },
       "permissions": [],
       "googleServicesFile": "./google-services.json",

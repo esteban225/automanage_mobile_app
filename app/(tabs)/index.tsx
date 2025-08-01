@@ -8,23 +8,20 @@ import {
 import { Link } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect } from "react";
+import { BlurView } from "expo-blur";
 
 export default function TabOneScreen() {
-
   useEffect(() => {
     const checkUser = async () => {
       try {
         const user = await AsyncStorage.getItem("user");
         if (user) {
-          console.log(
-            "[TabOneScreen] Usuario encontrado en AsyncStorage:",
-            JSON.parse(user)
-          );
+          console.log("[TabOneScreen] Usuario encontrado:", JSON.parse(user));
         } else {
-          console.log("[TabOneScreen] No hay usuario en AsyncStorage");
+          console.log("[TabOneScreen] No hay usuario");
         }
       } catch (error) {
-        console.error("[TabOneScreen] Error al obtener usuario:", error);
+        console.error("[TabOneScreen] Error:", error);
       }
     };
 
@@ -34,9 +31,10 @@ export default function TabOneScreen() {
   return (
     <View style={styles.container}>
       <Image source={require("@/assets/images/logo.png")} style={styles.logo} />
+      
       <Text style={styles.subtitle}>Tu taller organizado, siempre.</Text>
 
-      <View style={styles.buttonContainer}>
+      <BlurView intensity={70} tint="dark" style={styles.card}>
         <Link href="/login" asChild>
           <TouchableOpacity style={styles.buttonPrimary}>
             <Text style={styles.buttonText}>Iniciar Sesión</Text>
@@ -48,61 +46,54 @@ export default function TabOneScreen() {
             <Text style={styles.buttonTextAlt}>Registrarse</Text>
           </TouchableOpacity>
         </Link>
-      </View>
+      </BlurView>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#0f172a", // Azul oscuro elegante
+    justifyContent: "center",
+    alignItems: "center",
+    paddingHorizontal: 24,
+  },
   logo: {
-    width: 240,
-    height: 240,
-    marginBottom: 30,
+    width: 200,
+    height: 200,
+    marginBottom: 20,
     resizeMode: "contain",
     borderRadius: 20,
   },
-
-  container: {
-    flex: 1,
-    backgroundColor: "#f2f4f7",
-    justifyContent: "center",
-    alignItems: "center",
-    paddingHorizontal: 30,
-  },
-  title: {
-    fontSize: 36,
-    fontWeight: "bold",
-    color: "#1a1a1a",
-    marginBottom: 10,
-  },
   subtitle: {
-    fontSize: 16,
-    color: "#666",
-    marginBottom: 40,
+    fontSize: 18,
+    color: "#e2e8f0", // Texto claro sobre azul oscuro
     textAlign: "center",
+    marginBottom: 30,
   },
-  buttonContainer: {
+  card: {
     width: "100%",
+    maxWidth: 340,
+    padding: 24,
+    borderRadius: 20,
+    backgroundColor: "rgba(255,255,255,0.06)", // Glass
+    borderColor: "rgba(255,255,255,0.15)",
+    borderWidth: 1,
     gap: 16,
   },
   buttonPrimary: {
-    backgroundColor: "#007aff",
+    backgroundColor: "#3b82f6", // Azul moderno
     paddingVertical: 14,
-    borderRadius: 10,
+    borderRadius: 12,
     alignItems: "center",
   },
   buttonSecondary: {
-    backgroundColor: "#fff",
-    borderColor: "#007aff",
+    backgroundColor: "transparent",
+    borderColor: "#7dd3fc", // Borde azul claro
     borderWidth: 1.5,
     paddingVertical: 14,
-    borderRadius: 10,
-    alignItems: "center",
-  },
-  buttonDanger: {
-    backgroundColor: "#ff3b30",
-    paddingVertical: 14,
-    borderRadius: 10,
+    borderRadius: 12,
     alignItems: "center",
   },
   buttonText: {
@@ -111,7 +102,7 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
   buttonTextAlt: {
-    color: "#007aff",
+    color: "#7dd3fc", // Azul claro
     fontSize: 16,
     fontWeight: "600",
   },

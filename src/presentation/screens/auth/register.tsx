@@ -8,10 +8,11 @@ import {
   StyleSheet,
   SafeAreaView,
   Alert,
-  Platform, // Import Platform for platform-specific styles
-  ScrollView // Use ScrollView for better handling of content on smaller screens
+  Platform,
+  ScrollView,
 } from "react-native";
 import { useAuth } from "../../providers/AuthProvider";
+import { BlurView } from "expo-blur";
 
 export default function RegisterScreen() {
   const router = useRouter();
@@ -57,14 +58,12 @@ export default function RegisterScreen() {
         break;
       case "password":
         if (!value) error = "La contraseña es obligatoria.";
-        else if (value.length < 6) error = "La contraseña debe tener al menos 6 caracteres.";
+        else if (value.length < 6) error = "Debe tener al menos 6 caracteres.";
         break;
       case "confirmPassword":
-        if (!value) {
-          error = "Confirma tu contraseña.";
-        } else if (value !== credentials.password) {
+        if (!value) error = "Confirma tu contraseña.";
+        else if (value !== credentials.password)
           error = "Las contraseñas no coinciden.";
-        }
         break;
     }
 
@@ -89,37 +88,30 @@ export default function RegisterScreen() {
 
   const handleRegister = async () => {
     if (!validateForm()) {
-      Alert.alert("Error de validación", "Por favor, corrige los errores en el formulario.");
+      Alert.alert("Error", "Corrige los errores en el formulario.");
       return;
     }
 
     try {
       await register(credentials);
-      Alert.alert(
-        "Registro exitoso",
-        "Tu cuenta ha sido creada. Ahora puedes iniciar sesión.",
-        [
-          {
-            text: "OK",
-            onPress: () => router.replace("/login"),
-          },
-        ]
-      );
+      Alert.alert("Registro exitoso", "Ahora puedes iniciar sesión.", [
+        {
+          text: "OK",
+          onPress: () => router.replace("/login"),
+        },
+      ]);
     } catch (error: any) {
-      console.error("Error during registration:", error);
-      let errorMessage = "Ocurrió un error inesperado al registrarte.";
+      let errorMessage = "Ocurrió un error inesperado.";
 
-      if (error.response && error.response.data) {
+      if (error.response?.data) {
         const data = error.response.data;
-        if (data.errors) {
-          const messages = Object.values(data.errors).flat().join("\n");
-          errorMessage = messages;
-        } else if (data.message) {
-          errorMessage = data.message;
-        }
+        errorMessage = data.errors
+          ? Object.values(data.errors).flat().join("\n")
+          : data.message || errorMessage;
       } else if (error.message) {
         errorMessage = error.message;
       }
+
       Alert.alert("Registro fallido", errorMessage);
     }
   };
@@ -127,95 +119,72 @@ export default function RegisterScreen() {
   return (
     <SafeAreaView style={styles.safeArea}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
-        <Text style={styles.title}>Crear una cuenta</Text>
+        <BlurView intensity={90} tint="dark" style={styles.card}>
+          <Text style={styles.title}>Crear una cuenta</Text>
 
-        {/* Username */}
-        <View style={styles.inputContainer}>
-          <Text style={styles.inputLabel}>Nombre de Usuario</Text>
-          <TextInput
-            style={[styles.input, errors.username && styles.inputError]}
-            placeholder="Ej: juanperez"
-            value={credentials.username}
-            onChangeText={(text) => handleChange("username", text)}
-            onBlur={() => validateField("username", credentials.username)}
-            autoCapitalize="none"
-            textContentType="username" // Added for autofill on iOS
-          />
-          {errors.username ? <Text style={styles.errorText}>{errors.username}</Text> : null}
-        </View>
+          {[
+            {
+              label: "Nombre de Usuario",
+              field: "username",
+              placeholder: "Ej: juanperez",
+            },
+            {
+              label: "Nombre Completo",
+              field: "nombre",
+              placeholder: "Ej: Juan Pérez",
+            },
+            {
+              label: "Correo Electrónico",
+              field: "email",
+              placeholder: "Ej: correo@ejemplo.com",
+            },
+            {
+              label: "Contraseña",
+              field: "password",
+              placeholder: "Mínimo 6 caracteres",
+              secure: true,
+            },
+            {
+              label: "Confirmar Contraseña",
+              field: "confirmPassword",
+              placeholder: "Repite tu contraseña",
+              secure: true,
+            },
+          ].map(({ label, field, placeholder, secure }) => (
+            <View key={field} style={styles.inputContainer}>
+              <Text style={styles.inputLabel}>{label}</Text>
+              <TextInput
+                style={[styles.input, errors[field] && styles.inputError]}
+                placeholder={placeholder}
+                placeholderTextColor="#aaa"
+                value={(credentials as any)[field]}
+                onChangeText={(text) => handleChange(field, text)}
+                onBlur={() => validateField(field, (credentials as any)[field])}
+                secureTextEntry={secure}
+                autoCapitalize={
+                  field === "email" || field === "username" ? "none" : "words"
+                }
+              />
+              {errors[field] ? (
+                <Text style={styles.errorText}>{errors[field]}</Text>
+              ) : null}
+            </View>
+          ))}
 
-        {/* Nombre */}
-        <View style={styles.inputContainer}>
-          <Text style={styles.inputLabel}>Nombre Completo</Text>
-          <TextInput
-            style={[styles.input, errors.nombre && styles.inputError]}
-            placeholder="Ej: Juan Pérez"
-            value={credentials.nombre}
-            onChangeText={(text) => handleChange("nombre", text)}
-            onBlur={() => validateField("nombre", credentials.nombre)}
-            autoCapitalize="words"
-            textContentType="name" // Added for autofill on iOS
-          />
-          {errors.nombre ? <Text style={styles.errorText}>{errors.nombre}</Text> : null}
-        </View>
+          <TouchableOpacity style={styles.button} onPress={handleRegister}>
+            <Text style={styles.buttonText}>Registrarse</Text>
+          </TouchableOpacity>
 
-        {/* Email */}
-        <View style={styles.inputContainer}>
-          <Text style={styles.inputLabel}>Correo Electrónico</Text>
-          <TextInput
-            style={[styles.input, errors.email && styles.inputError]}
-            placeholder="Ej: correo@ejemplo.com"
-            value={credentials.email}
-            onChangeText={(text) => handleChange("email", text)}
-            onBlur={() => validateField("email", credentials.email)}
-            keyboardType="email-address"
-            autoCapitalize="none"
-            textContentType="emailAddress" // Added for autofill on iOS
-          />
-          {errors.email ? <Text style={styles.errorText}>{errors.email}</Text> : null}
-        </View>
-
-        {/* Password */}
-        <View style={styles.inputContainer}>
-          <Text style={styles.inputLabel}>Contraseña</Text>
-          <TextInput
-            style={[styles.input, errors.password && styles.inputError]}
-            placeholder="Mínimo 8 caracteres"
-            value={credentials.password}
-            onChangeText={(text) => handleChange("password", text)}
-            onBlur={() => validateField("password", credentials.password)}
-            secureTextEntry
-            textContentType="newPassword" // Added for autofill on iOS
-          />
-          {errors.password ? <Text style={styles.errorText}>{errors.password}</Text> : null}
-        </View>
-
-        {/* Confirm Password */}
-        <View style={styles.inputContainer}>
-          <Text style={styles.inputLabel}>Confirmar Contraseña</Text>
-          <TextInput
-            style={[styles.input, errors.confirmPassword && styles.inputError]}
-            placeholder="Repite tu contraseña"
-            value={credentials.confirmPassword}
-            onChangeText={(text) => handleChange("confirmPassword", text)}
-            onBlur={() => validateField("confirmPassword", credentials.confirmPassword)}
-            secureTextEntry
-            textContentType="newPassword" // Added for autofill on iOS
-          />
-          {errors.confirmPassword ? (
-            <Text style={styles.errorText}>{errors.confirmPassword}</Text>
-          ) : null}
-        </View>
-
-        <TouchableOpacity style={styles.button} onPress={handleRegister}>
-          <Text style={styles.buttonText}>Registrarse</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.loginLink} onPress={() => router.replace("/login")}>
-          <Text style={styles.loginLinkText}>
-            ¿Ya tienes una cuenta? <Text style={styles.loginLinkHighlight}>Inicia Sesión</Text>
-          </Text>
-        </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.loginLink}
+            onPress={() => router.replace("/login")}
+          >
+            <Text style={styles.loginLinkText}>
+              ¿Ya tienes cuenta?{" "}
+              <Text style={styles.loginLinkHighlight}>Inicia Sesión</Text>
+            </Text>
+          </TouchableOpacity>
+        </BlurView>
       </ScrollView>
     </SafeAreaView>
   );
@@ -224,82 +193,85 @@ export default function RegisterScreen() {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: "#F7F8FA", // A very light grey background for a clean look
+    backgroundColor: "#0d1b2a", // azul oscuro elegante
   },
   scrollContainer: {
-    flexGrow: 1, // Allows content to grow and be scrollable
+    flexGrow: 1,
     justifyContent: "center",
+    alignItems: "center",
     padding: 24,
-    paddingTop: Platform.OS === 'android' ? 50 : 24, // More top padding for Android devices
+  },
+  card: {
+    width: "100%",
+    maxWidth: 400,
+    borderRadius: 20,
+    padding: 24,
+    backgroundColor: "rgba(255, 255, 255, 0.04)",
+    ...Platform.select({
+      android: {
+        backgroundColor: "rgba(255, 255, 255, 0.07)",
+      },
+    }),
+    borderWidth: 1,
+    borderColor: "rgba(255, 255, 255, 0.1)",
   },
   title: {
-    fontSize: 28, // Larger title
-    fontWeight: "700", // Bolder
-    color: "#2C3E50", // Darker text for better contrast
-    marginBottom: 30, // More space below the title
-    textAlign: "center", // Center the title
+    fontSize: 28,
+    fontWeight: "700",
+    color: "#ffffff",
+    marginBottom: 24,
+    textAlign: "center",
   },
   inputContainer: {
-    marginBottom: 20, // Increased space between input fields
+    marginBottom: 16,
   },
   inputLabel: {
-    fontSize: 15,
-    color: "#5C6A7A", // A softer grey for labels
-    marginBottom: 8, // Space between label and input
-    fontWeight: "500", // Slightly bolder label
+    color: "#dbe9f4",
+    marginBottom: 6,
+    fontWeight: "500",
   },
   input: {
-    height: 50, // Slightly taller inputs
-    borderColor: "#D1D8DF", // Lighter border color
+    height: 50,
+    backgroundColor: "rgba(255, 255, 255, 0.06)",
+    borderColor: "rgba(255, 255, 255, 0.15)",
     borderWidth: 1,
-    borderRadius: 10, // More rounded corners
-    paddingHorizontal: 15, // Increased padding inside input
+    borderRadius: 12,
+    paddingHorizontal: 14,
+    color: "#fff",
     fontSize: 16,
-    backgroundColor: "#FFFFFF", // White background for inputs
-    color: "#333333", // Darker text inside input
-    shadowColor: "#000", // Subtle shadow for depth
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 2,
-    elevation: 2, // Android shadow
   },
   inputError: {
-    borderColor: "#E74C3C", // Red border for errors
-    borderWidth: 2, // Thicker border for errors
+    borderColor: "#ff6b6b",
+    borderWidth: 2,
   },
   errorText: {
-    color: "#E74C3C", // Red color for error messages
-    marginTop: 6, // Space above error text
+    color: "#ff6b6b",
+    marginTop: 4,
     fontSize: 13,
     fontWeight: "500",
   },
   button: {
-    backgroundColor: "#3498DB", // A vibrant blue for the button
-    paddingVertical: 15, // Slightly more vertical padding
-    borderRadius: 10, // More rounded corners
+    backgroundColor: "#4da6ff", // azul mejorado
+    paddingVertical: 14,
+    borderRadius: 12,
     alignItems: "center",
-    marginTop: 20, // Space above the button
-    shadowColor: "#000", // Shadow for button
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.15,
-    shadowRadius: 3,
-    elevation: 3, // Android shadow
+    marginTop: 16,
   },
   buttonText: {
-    color: "#FFFFFF", // White text
-    fontSize: 18,
-    fontWeight: "700", // Bolder text
+    color: "#fff",
+    fontWeight: "600",
+    fontSize: 16,
   },
   loginLink: {
-    marginTop: 25, // Space above the login link
+    marginTop: 20,
     alignItems: "center",
   },
   loginLinkText: {
     fontSize: 15,
-    color: "#5C6A7A", // Soft grey for the link text
+    color: "#b0cbe6",
   },
   loginLinkHighlight: {
-    color: "#3498DB", // Blue highlight for the "Inicia Sesión" part
+    color: "#ffffff",
     fontWeight: "600",
   },
 });
