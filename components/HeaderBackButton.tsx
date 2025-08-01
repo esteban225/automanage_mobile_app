@@ -9,7 +9,7 @@ export default function HeaderBackButton() {
 
   return (
     <TouchableOpacity
-      onPress={() => router.back()}
+      onPress={() => router.canGoBack() ? router.back() : router.push('/(tabs)')}
       style={{ paddingLeft: 36 }}
     >
       <Ionicons name="arrow-back" size={24} color={theme.text} />
