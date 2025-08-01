@@ -11,6 +11,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
  * que utiliza llamadas HTTP (mediante axios) para comunicarse con un backend.
  */
 const urlApi = 'http://192.168.100.7:8001/api';
+
 export class AuthRepositoryImpl implements AuthRepository {
 
   async login(credentials: AuthCredentials): Promise<User> {

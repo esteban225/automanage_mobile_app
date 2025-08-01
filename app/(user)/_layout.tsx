@@ -203,16 +203,6 @@ export default function UserLayout() {
           headerLeft: () => <HeaderBackButton />,
         }}
       />
-      {/* Pestaña "editar perfil" - Oculta de la barra de pestañas */}
-      <Tabs.Screen
-        name="settings/(screens)/profile-edit" // Ruta a la pantalla de edición de perfil.
-        options={{
-          headerShown: true, // Muestra el encabezado.
-          headerTitle: "Editar Perfil", // Título del encabezado.
-          href: null, // Oculta la pestaña.
-          headerLeft: () => <HeaderBackButton />,
-        }}
-      />
       {/* ------------------------------------------
         Pestañas del módulo de carro (rutas anidadas y ocultas)
         Estas pantallas son accesibles dentro del flujo del módulo 'car'
