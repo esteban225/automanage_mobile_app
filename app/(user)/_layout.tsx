@@ -1,8 +1,11 @@
 import { Tabs, useRouter } from "expo-router"; // Importa Link y useRouter de expo-router para la navegación.
 import { AntDesign, FontAwesome5, Ionicons } from "@expo/vector-icons"; // Importa Ionicons para el icono de campana.
 import { Pressable } from "react-native"; // Importa Pressable y View para hacer el icono interactivo.
-import { useTheme } from '@/src/presentation/theme/ThemeContext'; // Importar el hook de tema
+import { useTheme } from "@/src/presentation/theme/ThemeContext"; // Importar el hook de tema
 import HeaderBackButton from "@/components/HeaderBackButton";
+import { View } from "react-native";
+import { useEffect, useState } from "react";
+import * as Notifications from "expo-notifications";
 
 /**
  * @function TabBarIcon
@@ -31,16 +34,49 @@ function TabBarIcon(props: {
  * @param {object} props.router - El objeto router de Expo Router para la navegación.
  * @returns {JSX.Element} Un componente Pressable con el icono de notificación.
  */
-function NotificationBell({ theme, router }) {
+export function NotificationBell({ theme, router }) {
+  const [hasNewNotification, setHasNewNotification] = useState(false);
+
+  useEffect(() => {
+    // Escuchar notificaciones entrantes mientras la app está en primer plano
+    const subscription = Notifications.addNotificationReceivedListener(() => {
+      setHasNewNotification(true);
+    });
+
+    return () => {
+      subscription.remove(); // Limpieza al desmontar
+    };
+  }, []);
+
+  const handlePress = () => {
+    setHasNewNotification(false); // Marcar como leída
+    router.push("/notifications");
+  };
+
   return (
-    <Pressable onPress={() => router.push("/notifications")}>
+    <Pressable onPress={handlePress}>
       {({ pressed }) => (
-        <Ionicons
-          name="notifications-outline" // Icono de campana de Ionicons
-          size={25}
-          color={theme.icon} // Color del icono basado en el tema
-          style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }} // Estilo para el icono, con opacidad al presionar
-        />
+        <View style={{ position: "relative", marginRight: 15 }}>
+          <Ionicons
+            name="notifications-outline"
+            size={25}
+            color={theme.icon}
+            style={{ opacity: pressed ? 0.5 : 1 }}
+          />
+          {hasNewNotification && (
+            <View
+              style={{
+                position: "absolute",
+                top: -2,
+                right: -2,
+                width: 8,
+                height: 8,
+                borderRadius: 4,
+                backgroundColor: "#67ff30ff",
+              }}
+            />
+          )}
+        </View>
       )}
     </Pressable>
   );
@@ -86,9 +122,7 @@ export default function UserLayout() {
           tabBarIcon: ({ color }) => <TabBarIcon name="car" color={color} />,
           // Define el componente a renderizar en el lado derecho del encabezado.
           // Ahora usa el componente NotificationBell refactorizado.
-          headerRight: () => (
-            <NotificationBell theme={theme} router={router} />
-          ),
+          headerRight: () => <NotificationBell theme={theme} router={router} />,
         }}
       />
       {/* Pestaña "Inicio" - Visible en la barra de pestañas con icono de notificaciones */}
@@ -103,9 +137,7 @@ export default function UserLayout() {
           ),
           // Define el componente a renderizar en el lado derecho del encabezado.
           // Ahora usa el componente NotificationBell refactorizado.
-          headerRight: () => (
-            <NotificationBell theme={theme} router={router} />
-          ),
+          headerRight: () => <NotificationBell theme={theme} router={router} />,
         }}
       />
       {/* Pestaña "Emergencias" - Oculta de la barra de pestañas (`href: null`) */}
@@ -138,9 +170,7 @@ export default function UserLayout() {
           tabBarIcon: ({ color }) => <TabBarIcon name="user" color={color} />,
           // Define el componente a renderizar en el lado derecho del encabezado.
           // Ahora usa el componente NotificationBell refactorizado.
-          headerRight: () => (
-            <NotificationBell theme={theme} router={router} />
-          ),
+          headerRight: () => <NotificationBell theme={theme} router={router} />,
         }}
       />
       {/* Pestaña "Configuración" - Oculta de la barra de pestañas */}

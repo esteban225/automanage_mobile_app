@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Linking } from 'react-native';
 
@@ -115,3 +116,4 @@ const styles = StyleSheet.create({
     color: '#0077cc',
   },
 });
+
