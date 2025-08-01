@@ -59,7 +59,7 @@ export function NotificationBell({ theme, router }) {
         <View style={{ position: "relative", marginRight: 15 }}>
           <Ionicons
             name="notifications-outline"
-            size={25}
+            size={30}
             color={theme.icon}
             style={{ opacity: pressed ? 0.5 : 1 }}
           />
@@ -69,9 +69,9 @@ export function NotificationBell({ theme, router }) {
                 position: "absolute",
                 top: -2,
                 right: -2,
-                width: 8,
-                height: 8,
-                borderRadius: 4,
+                width: 10,
+                height: 10,
+                borderRadius: 6,
                 backgroundColor: "#ff5930ff",
               }}
             />
