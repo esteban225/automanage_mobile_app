@@ -7,7 +7,6 @@ import 'react-native-reanimated';
 
 import { AuthProvider } from '@/src/presentation/providers/AuthProvider';
 import { ThemeProvider } from '@/src/presentation/theme/ThemeContext';
-import { UserProvider } from '@/src/presentation/userContext/UserContext';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -47,9 +46,7 @@ export default function RootLayout() {
   return (
     <AuthProvider>
       <ThemeProvider>
-        <UserProvider>
           <Slot />
-        </UserProvider>
       </ThemeProvider>
     </AuthProvider>
   );
