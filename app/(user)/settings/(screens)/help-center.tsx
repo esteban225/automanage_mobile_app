@@ -1,10 +1,1 @@
-import { Text } from "react-native";
-
-export default function HelpCenter() {
-    return(
-        <Text>
-            hola
-        </Text>
-    )
-
-}
+export {default} from "@/src/presentation/screens/user/settings/setttingsScreens/help-center";
